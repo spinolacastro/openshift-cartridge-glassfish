@@ -1,0 +1,236 @@
+#############################################################################
+#
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 2000-2008 Sun Microsystems, Inc. All rights reserved. 
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common Development
+# and Distribution License ("CDDL") (collectively, the "License").  You may
+# not use this file except in compliance with the License.  You can obtain
+# a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+# or mq/legal/LICENSE.txt.  See the License for the specific language
+# governing permissions and limitations under the License.
+# 
+# When distributing the software, include this License Header Notice in each
+# file and include the License file at mq/legal/LICENSE.txt.  Sun designates
+# this particular file as subject to the "Classpath" exception as provided by
+# Sun in the GPL Version 2 section of the License file that accompanied this
+# code.  If applicable, add the following below the License Header, with the
+# fields enclosed by brackets [] replaced by your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+# 
+# Contributor(s):
+# 
+# If you wish your version of this file to be governed by only the CDDL or
+# only the GPL Version 2, indicate your decision by adding "[Contributor]
+# elects to include this software in this distribution under the [CDDL or GPL
+# Version 2] license."  If you don't indicate a single choice of license, a
+# recipient has the option to distribute your version of this file under
+# either the CDDL, the GPL Version 2 or  to extend the choice of license to
+# its licensees as provided above.  However, if you add GPL Version 2 code
+# and therefore, elected the GPL Version 2 license, then the option applies
+# only if the new code is made subject to such option by the copyright holder. 
+#
+#
+# @(#)ui.prefs	1.19 07/31/07
+# 
+#############################################################################
+
+# Properties file for all the view pages
+# Fragments line ${varname} are replaced by FreeMarker templating mechanism from other properties
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMMON STUFF ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PRODUCT_NAME=Sun Java(TM) System Message Queue 4.3
+
+app_title=Sun Java(TM) System Message Queue 4.3
+
+# L10n - Do not translate the next two properties
+BODY_START=&lt;HTML&gt;&lt;BODY&gt;&lt;FONT face=&quot;Sans-Serif&quot; size=&quot;3&quot;&gt;
+BODY_END=&lt;/FONT&gt;&lt;/BODY&gt;&lt;/HTML&gt;
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~W E L C O M E   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Welcome_WELCOME_TEXT=${BODY_START}Bienvenido al programa de instalaci\u00f3n de &lt;b&gt;${PRODUCT_NAME}&lt;/b&gt;.&lt;BR&gt;&lt;BR&gt;&lt;b&gt;&lt;Nota: &lt;/b&gt; este programa de instalaci\u00f3n actualizar\u00e1, en el sistema, el software que es posible que se haya instalado mediante un programa de instalaci\u00f3n diferente. Este proceso puede provocar que los registros del producto presenten un estado incoherente. Consulte la Gu\u00eda de instalaci\u00f3n de Sun Java System Message Queue 4.3 para obtener m\u00e1s informaci\u00f3n.&lt;BR&gt;&lt;BR&gt;${Copyright_HTML_FRAGMENT}${BODY_END}
+
+RegistrationWelcome_WELCOME_TEXT=${BODY_START}Bienvenido al programa de instalaci\u00f3n de &lt;b&gt;${PRODUCT_NAME}&lt;/b&gt;(en modo de solo registro).&lt;BR&gt;&lt;BR&gt;${Copyright_HTML_FRAGMENT}${BODY_END}
+
+Copyright_HTML_FRAGMENT=Copyright 2008 Sun Microsystems, Inc. Todos los derechos reservados.&lt;BR&gt;El uso est\u00e1 sujeto a las condiciones de la licencia.
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~L I C E N S E   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+License_LICENSE_TEXT1=${BODY_START}Lea atentamente el siguiente acuerdo de licencia.  Debe aceptar los t\u00e9rminos de este acuerdo para poder continuar con la instalaci\u00f3n. ${BODY_END}
+
+#
+# L10N: License_LICENSE_TEXT2 needs to be localized.
+# I have provided the translated text.  Please insert the text within each
+# ui_*_.prefs file so that it shows up in the installer correctly.  
+# Note that each line ends with "backslash n backslash n backslash"
+# (except the very last line).
+#
+License_LICENSE_TEXT2=Sun Microsystems, Inc. ("Sun")\n\
+CONTRATO DE LICENCIA DE SOFTWARE\n\
+\n\
+ANTES DE ABRIR EL PAQUETE DE SOFTWARE, LEA DETENIDAMENTE LOS T\u00c9RMINOS DEL PRESENTE CONTRATO ("CONTRATO"). ABRIR EL PAQUETE DE SOFTWARE IMPLICA LA ACEPTACI\u00d3N DE DICHOS T\u00c9RMINOS. SI ACCEDE DE FORMA ELECTR\u00d3NICA AL SOFTWARE, PULSE EL BOT\u00d3N "ACEPTAR" (O SIMILAR) QUE ENCONTRAR\u00c1 AL FINAL DEL PRESENTE CONTRATO PARA EXPRESAR SU CONFORMIDAD CON LOS T\u00c9RMINOS QUE CONTIENE. SI NO EST\u00c1 DE ACUERDO CON ALGUNO DE LOS T\u00c9RMINOS DEL PRESENTE CONTRATO, DEVUELVA INMEDIATAMENTE EL SOFTWARE SIN UTILIZAR AL ESTABLECIMIENTO EN QUE LO ADQUIRI\u00d3 PARA OBTENER LA DEVOLUCI\u00d3N DEL IMPORTE ABONADO O, SI ACCEDE AL SOFTWARE DE FORMA ELECTR\u00d3NICA, PULSE EL BOT\u00d3N "RECHAZAR" (O SIMILAR) QUE ENCONTRAR\u00c1 AL FINAL DE PRESENTE CONTRATO. SI HA ACEPTADO POR SEPARADO LOS T\u00c9RMINOS DE LICENCIA ("T\u00c9RMINOS PRINCIPALES") CORRESPONDIENTES A LA LICENCIA DE ESTE SOFTWARE, LAS SECCIONES 1-6 DEL PRESENTE CONTRATO ("T\u00c9RMINOS ADICIONALES DE LICENCIA") COMPLEMENTAR\u00c1N A Y PREVALECER\u00c1N SOBRE LOS T\u00c9RMINOS PRINCIPALES RELATIVOS A ESTE SOFTWARE.\n\
+\n\
+1. Definiciones.\n\
+\n\
+(a) "Derechos de Uso" se refiere al conjunto de documentos aplicables autorizados por Sun como prueba de su obligaci\u00f3n de abonar las cuotas asociadas (si existen) a la licencia, los Servicios asociados y el \u00e1mbito de uso del Software autorizado seg\u00fan los t\u00e9rminos del presente Contrato.\n\
+\n\
+(b) "Unidad con Licencia" se refiere a la unidad de medida por la cual se otorga licencia para utilizar el Software y/o el Servicio seg\u00fan lo descrito en los Derechos de Uso.\n\
+\n\
+(c) "Uso Permitido" hace referencia al uso (o usos) del Software con licencia autorizado en este Contrato seg\u00fan lo especificado en los Derechos de Uso. El Uso Permitido de cualquier paquete de software complementario de Sun que no se haya especificado en los Derechos de Uso ser\u00e1 la utilizaci\u00f3n con fines de evaluaci\u00f3n tal y como se establece en la Secci\u00f3n 3.\n\
+\n\
+(d) "Servicio" hace referencia a los servicios (si existen) que Sun o quien act\u00fae por su cuenta suministrar\u00e1n seg\u00fan lo establecido en los Derechos de Uso y seg\u00fan se explica en las descripciones de servicios aplicables que se encuentran en www.sun.com/service/servicelist.\n\
+\n\
+(e) "Software" se refiere al software de Sun descrito en los Derechos de Uso. Tambi\u00e9n puede referirse a ciertos paquetes de software que pueden haberse incluido con fines de evaluaci\u00f3n seg\u00fan lo estipulado en la Secci\u00f3n 3. \n\
+\n\
+(f) "Usted" y "Su" hacen referencia a la persona f\u00edsica o jur\u00eddica que se haya especificado en los Derechos de Uso o, en caso de evaluaci\u00f3n del software, la entidad que realice la evaluaci\u00f3n.\n\
+\n\
+2. Otorgamiento de Licencia y Derechos de Uso.\n\
+\n\
+Sun le otorga una licencia limitada, no exclusiva e intransferible que est\u00e1 sujeta a los t\u00e9rminos de los Derechos de Uso y le autoriza a usar el Software para el Uso Permitido durante el periodo de validez de la licencia. Sus Derechos de Uso especificar\u00e1n el (a) Software con Licencia, (b) el Uso Permitido, (c) el periodo de validez de la licencia y (d) las Unidades con Licencia. \n\
+\n\
+Asimismo, en caso de que sus Derechos de Uso incluyan Servicios, tambi\u00e9n deber\u00e1 especificar el (e) Servicio y el (f) periodo de prestaci\u00f3n del servicio. \n\
+\n\
+Si sus derechos con respecto al Software o los Servicios est\u00e1n limitados en duraci\u00f3n y la fecha de comienzo de tales derechos difiere de la fecha de adquisici\u00f3n, sus Derechos de Uso deber\u00e1n incluir tal(es) fecha(s).\n\
+\n\
+Los Derechos de Uso se le podr\u00e1n entregar por diferentes medios en funci\u00f3n de la forma en que haya obtenido el Software y los Servicios. Por ejemplo, pueden suministrarse en el recibo de compra, la factura o el contrato suscrito con Sun o con el distribuidor autorizado de Sun. Tambi\u00e9n se le podr\u00e1n entregar en formato electr\u00f3nico si ha descargado el Software.\n\
+\n\
+3. Uso Permitido.\n\
+\n\
+Uno o varios de los siguientes Usos Permitidos se aplicar\u00e1n a su Software, seg\u00fan se haya establecido en los Derechos de Uso. A menos que sus Derechos de Uso lo permitan de forma expl\u00edcita, usted no podr\u00e1 utilizar el Software para ning\u00fan otro Uso Permitido. Si no posee Derechos de Uso o sus Derechos de Uso no cubren los paquetes de software adicionales que se le hayan suministrado, s\u00f3lo podr\u00e1 utilizar tales paquetes de software con Fines de Evaluaci\u00f3n.\n\
+\n\
+(a) Fines de Evaluaci\u00f3n. Puede evaluar el Software internamente durante un periodo de 90 d\u00edas a partir de la fecha de inicio del uso. \n\
+\n\
+(b) Uso para Investigaci\u00f3n e Instrucci\u00f3n. Puede utilizar el Software internamente con fines de dise\u00f1o, desarrollo y realizaci\u00f3n de pruebas, as\u00ed como para fines de instrucci\u00f3n con respecto a tales usos.\n\
+\n\
+(c) Uso Individual. Puede utilizar el Software internamente para uso personal e individual.\n\
+\n\
+(d) Uso Comercial. Puede usar el Software internamente para sus propios fines comerciales. \n\
+\n\
+(e) Uso para el Suministro de Servicios. Puede poner la funcionalidad del Software a disposici\u00f3n de sus usuarios finales a trav\u00e9s de una extranet, pero no est\u00e1 autorizado a suministrar el propio Software, directamente ni por medio de servicios de outsourcing, ni tampoco estar\u00e1 autorizado a poner la funcionalidad del Software a disposici\u00f3n de compa\u00f1\u00edas filiales o instituciones gubernamentales.\n\
+\n\
+4. Unidades con Licencia.\n\
+\n\
+Su Uso Permitido se limita al n\u00famero de Unidades con Licencia se\u00f1aladas en sus Derechos de Uso. Si requiere Unidades con Licencia adicionales, necesitar\u00e1 obtener Derechos de Uso adicionales.\n\
+\n\
+5. Limitaciones.\n\
+\n\
+(a) Las copias del Software suministradas con este Contrato han sido otorgadas por Sun mediante una licencia y no mediante una operaci\u00f3n de compraventa. Sun se reserva todos los derechos que no haya otorgado de forma expresa. (b) No puede copiar, modificar ni distribuir el Software bajo ning\u00fan concepto, salvo el de la copia realizada con fines de almacenamiento. No obstante, si la documentaci\u00f3n de Sun entregada con el Software especifica porciones del Software tales como archivos de cabecera, bibliotecas de clases, c\u00f3digo fuente de referencia y/o archivos redistribuibles que pueden recibir un tratamiento diferente, podr\u00e1 hacerlo \u00fanicamente seg\u00fan lo estipulado en la documentaci\u00f3n de Sun. (c) No est\u00e1 autorizado a arrendar, prestar ni gravar el Software. (d) A menos que la Ley disponga otra cosa, no podr\u00e1 descompilar ni realizar operaciones de ingenier\u00eda inversa en el Software. (e) Los T\u00e9rminos y Condiciones del presente Contrato se aplicar\u00e1n a cualquier actualizaci\u00f3n del Software que, por decisi\u00f3n de Sun, se le entregue en sustituci\u00f3n y/o como complemento del Software, a menos que dicha actualizaci\u00f3n contenga una licencia diferente. (f) No est\u00e1 autorizado a publicar ni suministrar a terceros los resultados de ninguna prueba de laboratorio o comparativa realizada con el Software sin el consentimiento previo y por escrito de Sun. (g) El Software es confidencial y est\u00e1 protegido derechos de autor. (h) A menos que se especifique lo contrario, si el Software se entrega con otros paquetes de software integrados o adicionales que habilitan la funcionalidad del Software, no podr\u00e1 utilizar tales paquetes de software de forma aut\u00f3noma, ni utilizar partes de esos paquetes para interoperar con ning\u00fan programa (o programas) que no sea el propio Software. (i) El Software puede contener programas que recopilan autom\u00e1ticamente datosdel sistema y/o realizan servicios de actualizaci\u00f3n autom\u00e1tica de software. Sun, sus empresas subcontratadas y las personas que prestan servicios de entrega podr\u00e1n utilizar los datos del sistema recopilados a fin de proporcionarle servicios remotos y/o mejorar el software y los sistemas de Sun. (j) El Software no se ha dise\u00f1ado ni dispone de licencia para ser utilizado en el dise\u00f1o, la construcci\u00f3n, el manejo o el mantenimiento de instalaciones nucleares, y Sun y sus licenciantes no otorgan ninguna garant\u00eda expresa o impl\u00edcita de idoneidad para tales usos. (k) Este Contrato no otorga ning\u00fan derecho ni t\u00edtulo de propiedad sobre las marcas comerciales, las marcas de servicios, los logotipos o los nombres comerciales de Sun o de sus licenciantes.\n\
+\n\
+6. Compatibilidad con Java y C\u00f3digo Abierto.\n\
+\n\
+El Software puede contener tecnolog\u00eda Java. No est\u00e1 autorizado a crear clases adicionales ni modificaciones de la tecnolog\u00eda Java, salvo que los requisitos de compatibilidad dispongan otra cosa en un contrato por separado disponible en www.java.net.\n\
+\n\
+Sun apoya y se beneficia de las aportaciones de la comunidad de desarrolladores de aplicaciones de c\u00f3digo abierto y agradece su importante contribuci\u00f3n y su tecnolog\u00eda basada en est\u00e1ndares abiertos, que Sun ha adoptado en muchos de sus productos.\n\
+\n\
+Tenga presente que algunas partes del Software pueden suministrarse con avisos y licencias de c\u00f3digo abierto procedentes de estas comunidades y de entidades que regulan el uso de dichas partes, y que cualquier licencia otorgada con arreglo al presente documento no altera ninguno de los derechos y obligaciones que haya contra\u00eddo con las licencias de c\u00f3digo abierto, si bien las disposiciones sobre exclusi\u00f3n de garant\u00edas y limitaci\u00f3n de responsabilidades contenidas en el presente Contrato ser\u00e1n aplicables a todo el Software de esta distribuci\u00f3n.\n\
+\n\
+7. Duraci\u00f3n y Terminaci\u00f3n. \n\
+\n\
+La duraci\u00f3n de la licencia y los servicios se establecen en los Derechos de Uso. Los derechos expresados en el presente Contrato quedar\u00e1n sin efecto de forma inmediata y sin previo aviso por parte de Sun en caso de que usted incumpla de forma importante alguno de sus t\u00e9rminos o realice cualesquiera acciones que contravengan los derechos de Sun y/o sus licenciantes sobre el Software. Sun podr\u00e1 dar por terminado el Contrato en caso de que cualquier Software se sujete, o a juicio de Sun, sea susceptible de sujetarse a una demanda por violaci\u00f3n de los derechos de propiedad intelectual o por apropiaci\u00f3n indebida de secretos comerciales. A la terminaci\u00f3n del Contrato, usted deber\u00e1 dejar de utilizar el Software, destruir\u00e1 todas sus copias y proporcionar\u00e1 a Sun una declaraci\u00f3n escrita donde certifique que ha cumplido estas obligaciones. Las Secciones 1, 5, 6, 7 y 9-15 se mantendr\u00e1n en vigor despu\u00e9s de la terminaci\u00f3n del Contrato.\n\
+\n\
+8. Garant\u00eda limitada. \n\
+\n\
+Sun garantiza que los medios en los que se proporciona el Software (si los hubiera) se encontrar\u00e1n libres de defectos en los materiales o de fabricaci\u00f3n, siempre y cuando se den circunstancias normales de uso, durante un periodo de 90 d\u00edas a partir de la fecha de adquisici\u00f3n, que se demostrar\u00e1 con la presentaci\u00f3n de una copia del recibo de compra. Excepto en los casos especificados anteriormente, el Software se suministra "TAL CUAL". El \u00fanico recurso disponible y la responsabilidad total de Sun de conformidad con la presente garant\u00eda limitada radicar\u00e1n en el derecho que Sun se reserva para determinar la sustituci\u00f3n de los medios del Software o la devoluci\u00f3n del importe abonado por \u00e9ste.\n\
+\n\
+9. Exclusi\u00f3n de garant\u00edas. \n\
+\n\
+A MENOS QUE EN EL PRESENTE CONTRATO SE ESTIPULE LO CONTRARIO, SE RENUNCIA A TODAS LAS CONDICIONES, MANIFESTACIONES Y GARANT\u00cdAS EXPL\u00cdCITAS O IMPL\u00cdCITAS, INCLUIDA CUALQUIER GARANT\u00cdA IMPL\u00cdCITA DE COMERCIABILIDAD, IDONEIDAD PARA UN PROP\u00d3SITO DETERMINADO O PARA LA CONTRAVENCI\u00d3N DEL PRESENTE CONTRATO, SALVO EN AQUELLOS CASOS EN LOS QUE ESTAS EXCLUSIONES CAREZCAN DE VALIDEZ JUR\u00cdDICA.\n\
+ \n\
+10. Limitaci\u00f3n de responsabilidad. \n\
+\n\
+EN LA MEDIDA EN QUE LO PERMITA LA LEGISLACI\u00d3N APLICABLE, EN NING\u00daN CASO SUN O SUS LICENCIANTES ASUMIR\u00c1N RESPONSABILIDAD ALGUNA POR LA P\u00c9RDIDA DE INGRESOS, BENEFICIOS O INFORMACI\u00d3N, AS\u00cd COMO POR CUALQUIER TIPO DE DA\u00d1OS O PERJUICIOS, INDEPENDIENTEMENTE DEL MOTIVO QUE LOS ORIGINE Y DEL CONTENIDO DE SU RESPONSABILIDAD, O QUE SE DERIVEN O EST\u00c9N RELACIONADOS CON EL USO INADECUADO DEL SOFTWARE O CON LA IMPOSIBILIDAD DE UTILIZARLO, INCLUSO EN AQUELLOS CASOS EN LOS QUE SE HAYA ADVERTIDO A SUN DE LA POSIBILIDAD DE QUE SE PRODUZCAN TALES DA\u00d1OS. En ning\u00fan caso Sun asumir\u00e1 la responsabilidad, ya sea por motivos contractuales o il\u00edcitos (incluida negligencia) o de cualquier otro tipo, de abonar una cantidad superior al pago realizado por el licenciatario, seg\u00fan lo estipulado en el presente Contrato. Las limitaciones anteriores se aplicar\u00e1n incluso en aquellos casos en los que la antedicha garant\u00eda falte a su prop\u00f3sito fundamental.\n\
+\n\
+11. Normativas relativas a la exportaci\u00f3n. \n\
+\n\
+El Software y toda la informaci\u00f3n t\u00e9cnica suministrada de conformidad con el presente Contrato se rigen por las leyes de control de exportaciones de los Estados Unidos, as\u00ed como por las normativas relativas a la exportaci\u00f3n o importaci\u00f3n espec\u00edficas de cada pa\u00eds en cuesti\u00f3n. El licenciatario se compromete a cumplir de forma estricta dichas leyes y normativas, y reconoce su responsabilidad en la obtenci\u00f3n de las licencias correspondientes de exportaci\u00f3n, reexportaci\u00f3n o importaci\u00f3n una vez efectuada la entrega.\n\
+\n\
+12. Derechos restringidos del Gobierno de los Estados Unidos. \n\
+\n\
+Los derechos del Gobierno de los Estados Unidos sobre el Software y la documentaci\u00f3n adjunta, en aquellos casos en que el Software se haya adquirido por o en nombre de dicho Gobierno, o bien por uno de sus contratistas o subcontratistas principales (a cualquier escala), quedar\u00e1n limitados a lo establecido en el presente Contrato, conforme a lo estipulado en el reglamento 48 CFR del 227.7201 al 227.7202-4 (para adquisiciones del Departamento de Defensa) y en el reglamento 48 CFR 2.101 y 12.212 (para adquisiciones que no sean hechas por el Departamento de Defensa).\n\
+\n\
+13. Legislaci\u00f3n aplicable. \n\
+\n\
+Toda acci\u00f3n judicial que pudiera emprenderse en relaci\u00f3n con este Contrato se someter\u00e1 a la jurisdicci\u00f3n del estado de California, as\u00ed como a la legislaci\u00f3n federal aplicable de los Estados Unidos. Por consiguiente, queda excluida toda posibilidad de interpretaci\u00f3n en virtud de cualquier otra ley.\n\
+\n\
+14. Independencia de las cl\u00e1usulas contractuales. \n\
+\n\
+La imposibilidad de cumplir alguna de las cl\u00e1usulas del presente Contrato no afectar\u00e1 al resto del Contrato, que seguir\u00e1 siendo v\u00e1lido a menos que la omisi\u00f3n de dichas cl\u00e1usulas pudiera perjudicar los prop\u00f3sitos de las partes, en cuyo caso se considerar\u00e1 rescindido de forma inmediata.\n\
+\n\
+15. Totalidad del contrato. \n\
+\n\
+A todos los efectos el presente Contrato se considerar\u00e1 como el contrato \u00fanico establecido entre el licenciatario y Sun en relaci\u00f3n con el objeto descrito. Por consiguiente, el presente Contrato invalida todo contacto, propuesta, manifestaci\u00f3n o garant\u00eda que se haya efectuado entre las partes, anterior o actual, oral o escrito, y prevalecer\u00e1 en todo momento sobre los t\u00e9rminos adicionales o contradictorios de cualquier texto, acuerdo, aceptaci\u00f3n o contacto relativos al objeto del Contrato y que pudieran llevar a cabo las partes durante el periodo de vigencia de \u00e9ste. Las modificaciones efectuadas sobre el presente Contrato no resultar\u00e1n en modo alguno vinculantes si no se presentan por escrito y firmadas por un representante autorizado de cada parte.\n\
+\n\
+Si tiene cualquier pregunta, p\u00f3ngase en contacto con Sun Microsystems, Inc. 4150 Network Circle, Santa Clara, California 95054.\n
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I N S T A L L    H O M E   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DEFAULT_INSTALL_HOME=
+
+INSTALL_TOP_TEXT=${BODY_START}Especifique el directorio que servir\u00e1 como ubicaci\u00f3n de instalaci\u00f3n en el sistema de destino para el producto ${PRODUCT_NAME.&lt;BR&gt;${BODY_END}
+
+SPECIFY_HOME_MSG=Especifique un directorio para la instalaci\u00f3n.
+
+INSTALL_BOTTOM_TEXT=${BODY_START}Si especifica un directorio de instalaci\u00f3n que no existe, este programa de instalaci\u00f3n crear\u00e1 uno.${BODY_END}
+
+MQ_INSTALL_HOME_LABEL=Directorio principal de instalaci\u00f3n
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I N S T A L L    D I R   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+INSTALLDIR_TOP_TEXT=${BODY_START}Especifique el directorio para la instalaci\u00f3n de ${PRODUCT_NAME} que desea registrar${BODY_END}
+
+SPECIFY_INSTALLDIR_MSG=Especifique el directorio que contiene la instalaci\u00f3n.
+
+MQ_INSTALL_DIR_LABEL=Directorio de instalaci\u00f3n
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  L10N SELECTION PAGE ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# L10N SELECTION PAGE 
+L10N_HOME_TEXT=${BODY_START}Seleccione una opci\u00f3n de las siguientes.${BODY_END}
+
+L10N_CHOICE_TEXT=Instalar paquetes multiling\u00fces de Message Queue
+INSTALL_L10N_TOOLTIP=Seleccione esta opci\u00f3n para instalar los paquetes multiling\u00fces de Message Queue.
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~A D M I N   P A S S W O R D   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UPGRADE PAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~R E A D Y   T O   I N S T A L L   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P R O G R E S S   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# L10n: only translate the "Progress:" string.  leave the rest unchanged.
+PROGRESS_TITLE=${BODY_START}Progreso:${BODY_END}
+
+
+# L10n: only translate the "Please wait" string.  leave the rest unchanged.
+PROGRESS_WAIT=${BODY_START}Espere:${BODY_END}
+               
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~S U M M A R Y   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~REGISTRATION OPTIONS   P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+REGISTRATION_TEXT1=${BODY_START}\u00bfPor qu\u00e9 debo registrarme? Consiga un acceso c\u00f3modo a&lt;UL&gt;&lt;LI&gt;la informaci\u00f3n de parches y actualizaciones de errores&lt;/LI&gt;&lt;LI&gt;difusi\u00f3n de pantallas y tutoriales,&lt;/LI&gt;&lt;LI&gt;asistencia y ofertas de formaci\u00f3n, entre otras muchas ventajas.&lt;/LI&gt;&lt;/UL&gt;${BODY_END}
+CREATE_ACCT_LABEL=No dispongo de una cuenta en l\u00ednea de Sun. Deseo registrarme.
+USE_ACCT_LABEL=Ya dispongo de una cuenta en l\u00ednea de Sun.
+USER_NAME_LABEL=Nombre de usuario
+USER_PASSWORD_LABEL=Contrase\u00f1a de usuario
+SKIP_REG_LABEL=Omitir registro.
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Create Sun Online Account P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MQ_EMAIL_ADDRESS=Direcci\u00f3n de correo electr\u00f3nico
+MQ_PASSWORD=Contrase\u00f1a
+MQ_RETYPE_PASSWORD=Escriba de nuevo la contrase\u00f1a
+MQ_FIRST_NAME=Nombre
+MQ_LAST_NAME=Apellidos
+MQ_COUNTRY=Pa\u00eds
+
+CREATE_SOA_TITLE=Crear una cuenta en l\u00ednea de Sun
+
+CREATE_SOA_TEXT1=${BODY_START}Introduzca la siguiente informaci\u00f3n para crear una cuenta en l\u00ednea de Sun.  Todos los campos son obligatorios.${BODY_END}
+
+CREATE_SOA_TEXT2=${BODY_START}Haga clic aqu\u00ed para visualizar &lt;a href=http://www.sun.com/privacy/&gt;la pol\u00edtica de privacidad de Sun&lt;/a&gt;.${BODY_END}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Registration Preferences P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MQ_USE_PROXY_HEADER=${BODY_START}El registro se realiza enviando los datos a trav\u00e9s de Internet. Si es necesario un servidor proxy de Internet para acceder a Internet desde este host, esta pantalla se deber\u00eda utilizar para especificar el host y el puerto del servidor proxy.&lt;BR&gt;&lt;BR&gt;No se utiliza el servidor proxy de forma predeterminada.${BODY_END}
+MQ_USE_PROXY=Usar servidor proxy de Internet
+MQ_PROXY_HOST=Host del servidor proxy
+MQ_PROXY_PORT=Puerto del servidor proxy
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Registration Progress P A G E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MQ_REG_PROGRESS=Progreso del registro

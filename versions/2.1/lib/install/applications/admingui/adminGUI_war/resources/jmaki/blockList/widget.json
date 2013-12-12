@@ -1,0 +1,32 @@
+{
+  'name': 'blockList',
+  'type': 'jmaki',
+  'version': '1.0',
+  'jmakiVersion' : '1.0',
+  'author' : 'Greg Murray',
+  'image' : 'images/jmaki-blockList.jpg',           
+  'url' : 'https://ajax.dev.java.net',    
+  'description': 'An highly customizable list of block components you can customize.',
+  'args': [
+         {'showNavigation':{'type':'BOOLEAN', 'defaultValue': 'true', 'description': 'Whether or not to show navigation arrows when pagging is available.'}},
+         {'count':{'type':'NUMBER', 'defaultValue': 3, 'description': 'The number of blocks to display at any given time.'}}
+         ],
+         'config' : {
+          'type' :
+           { 'id' : 'jmaki',
+              'themes' : [
+                   {'id' : 'orange',
+                    'default' : true,
+                     'style' : '../resources/styles/themes/orange/theme.css'
+                   },
+                   {'id' : 'chocolate',
+                     'style' : '../resources/styles/themes/chocolate/theme.css'
+                   }
+               ],
+               'resources' : [
+                   '../resources/styles'
+               ],
+               'libs' : []      /* This is to avoid AjaxCommon JSON Error: org.json.JSONException: JSONObject["libs"] not found */
+          }  
+    }     
+}

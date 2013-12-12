@@ -1,0 +1,580 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<!--Arbortext, Inc., 1988-2007, v.4002--><!-- GenHTML@16097-->
+  <meta http-equiv="content-type"
+ content="text/html; charset=iso-8859-1">
+<!-- ident	"%Z%%M%	%I%	%E% SMI" -->
+  <title>Quick Start for Basic Features</title>
+  <link href="css/default.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<table border="0" cellpadding="2" cellspacing="4" width="100%">
+  <tbody>
+    <tr>
+      <td align="right" valign="top"> <a href="http://www.sun.com"><img
+ src="graphics/logo_sun.gif" alt="Sun Microsystems logo" border="0"></a>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" bgcolor="#587993" valign="top"> <font
+ color="#ffffff">&nbsp;&nbsp;<b>Sun GlassFish Enterprise Server 2.1</b></font>
+      </td>
+    </tr>
+  </tbody>
+</table>
+&nbsp;<br>
+&nbsp;<br>
+<!--startindex--><a name="gehws"></a>
+<h1>Quick Start for Basic Features</h1>
+<p>Welcome to the <i>Quick Start Guide.</i> This guide describes basic
+steps for using Application Server. </p>
+<hr noshade="noshade" size="1">
+<p><b>Note - </b>For the latest version of
+this document, see the <i>Sun GlassFish<sup>TM</sup> Enterprise Server
+2.1 Quick Start Guide</i> posted at <a href="http://docs.sun.com">docs.sun.com</a>.
+The posted version of this document contains additional instructions
+for advanced features, such as clusters
+and load balancing.</p>
+<hr noshade="noshade" size="1">
+<p>Before using the procedures in this document you must have already
+installed the Application Server software. </p>
+<p>The steps are presented in the order that you should complete them.
+This section contains the following topics:</p>
+<ul>
+  <li>
+    <p><a href="#admtools">Application Server Administration Tools</a></p>
+  </li>
+  <li><a href="#default">Default Administration Values</a><br>
+  </li>
+  <li>
+    <p><a href="#var">Variable Names and Default Paths</a></p>
+  </li>
+  <li><a href="#start">Starting the Server<br>
+    <br>
+    </a></li>
+  <li> <a href="#addclustersupport">Adding Cluster Support to a Domain</a><br>
+  </li>
+  <li>
+    <p><a href="#next">Where to Go Next</a></p>
+  </li>
+</ul>
+<a name="admtools"></a>
+<h2>Application Server Administration Tools<br>
+</h2>
+<p>To enable administrators to manage server instances and clusters
+running on multiple hosts, Application Server provides these tools:</p>
+<ul>
+  <li>
+    <p>The Admin Console, a browser-based graphical user interface (GUI)</p>
+  </li>
+  <li>
+    <p>The asadmin utility, a command-line tool</p>
+  </li>
+</ul>
+<p>These tools connect to a server called the <b>Domain</b> <b>Administration</b>
+<b>Server</b>, a specially designated Application Server instance that
+intermediates in all administrative tasks. The Domain Administration
+Server (DAS) provides a single secure interface for validating and
+executing administrative commands regardless of which interface is
+used. A <b>domain</b> is a collection of configuration data, deployed
+applications, and machines with a designated administrator. The domain
+definition describes and can control the operation of several
+applications, stand-alone
+application server instances, and clusters, potentially spread over
+multiple machines. When the DAS is installed, a default domain called <b>domain1</b>
+is always installed.<br>
+</p>
+<p><a name="default"></a><br>
+</p>
+<h2>Default Administration Values</h2>
+<br>
+<table style="width: 475px; height: 228px;" border="1" cellpadding="0"
+ cellspacing="5">
+  <tbody>
+    <tr>
+      <th style="white-space: nowrap;" scope="col">
+      <p><span style="font-weight: normal;">Domain&nbsp; name</span></p>
+      </th>
+      <th style="font-weight: normal;" scope="col">
+      <p>domain1</p>
+      </th>
+    </tr>
+    <tr>
+      <td style="white-space: nowrap;">
+      <div style="text-align: center;"> </div>
+      <p style="text-align: center;">&nbsp;Instance name<i><br>
+      </i></p>
+      </td>
+      <td style="text-align: center;"> server</td>
+    </tr>
+    <tr>
+      <td style="white-space: nowrap;">
+      <div style="text-align: center;"> </div>
+      <p style="text-align: center;">Admin user<i><br>
+      </i></p>
+      </td>
+      <td style="text-align: center;">admin<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="white-space: nowrap;">
+      <div style="text-align: center;"> </div>
+      <p style="text-align: center;"><i>&nbsp;</i>Admin password<i><br>
+      </i></p>
+      </td>
+      <td>
+      <div style="text-align: center;"> </div>
+      <p style="text-align: center;">adminadmin&nbsp; &nbsp;&nbsp; <i><br>
+      </i></p>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Master passsword<br>
+      <br>
+      </td>
+      <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+changeit<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;"><br>
+Admin port<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;"><br>
+4848<br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;"><br>
+Instance (HTTP) port <br>
+      </td>
+      <td style="vertical-align: top; text-align: center;"><br>
+8080<br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;"><br>
+HTTPS port<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;"><br>
+8181<br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; IMQ port<br>
+      <br>
+      </td>
+      <td style="vertical-align: top;">&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+7676<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      <div style="text-align: center;">ORB port<br>
+      </div>
+&nbsp;&nbsp;&nbsp; <br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      <div style="text-align: center;">3700<br>
+      </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<h2><a name="var"></a></h2>
+<h2>Variable Names and Default Paths</h2>
+<p>The following table describes what the variable names and default
+paths are for the directories used in this guide. Variable names are in
+the first column, and default paths are in the second column.</p>
+<table style="width: 843px; height: 476px;" border="1" cellspacing="5">
+  <tbody>
+    <tr>
+      <th scope="col">
+      <p>Variable Name</p>
+      </th>
+      <th scope="col">
+      <p>Description and Path</p>
+      </th>
+    </tr>
+    <tr>
+      <td>
+      <p><i>install-dir</i></p>
+      </td>
+      <td>
+      <p>By default, the Application Server installation directory is
+located here:</p>
+      <ul>
+        <li>
+          <p>Solaris Java Enterprise System installations: <tt>/opt/SUNWappserver/appserver</tt></p>
+        </li>
+        <li>
+          <p>Linux Java Enterprise System installations: <tt>/opt/sun/appserver/</tt></p>
+        </li>
+        <li>
+          <p>Windows Java Enterprise System installations: <i>SystemDrive</i><tt>:\Sun\ApplicationServer</tt></p>
+        </li>
+        <li>
+          <p>Solaris and Linux stand-alone Application Server
+installations, non-root user: <i>user_home_directory</i><tt>/SUNWappserver</tt></p>
+        </li>
+        <li>
+          <p>Solaris and Linux stand-alone Application Server
+installations, root user: <tt>/opt/SUNWappserver</tt></p>
+        </li>
+        <li>
+          <p>Windows stand-alone installations: <i>SystemDrive</i><tt>:\Sun\AppServer</tt></p>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <p><i>domain_root_dir</i></p>
+      </td>
+      <td>
+      <p>By default, the directory containing all domains is located
+here:</p>
+      <ul>
+        <li>
+          <p>Solaris Java Enterprise System installations: <tt>/var/opt/SUNWappserver/domains/</tt></p>
+        </li>
+        <li>
+          <p>Linux Java Enterprise System installations: <tt>/var/opt/sun/appserver/domains/</tt></p>
+        </li>
+        <li>
+          <p>All other installations: <i>install-dir</i><tt>/domains/</tt></p>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <p><i>domain_dir</i></p>
+      </td>
+      <td>
+      <p>By default, domain directories are located here: <i>domain_root_dir</i>
+      <tt>/</tt><i>domain_dir</i></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<a name="start"></a>
+<h2>Starting the Server<br>
+</h2>
+<p>This topic provides instructions for the following basic tasks:
+starting the Domain Administration Server (DAS), logging into the Admin
+Console, and examining the log files. The steps are presented
+in the order that you should complete them.</p>
+<h3><img style="border: 0px solid ; width: 20px; height: 20px;"
+ src="graphics/procedure.gif" alt="Procedure">To Start the Domain on
+Solaris and Linux</h3>
+<p>To start the Domain Administration Server, start the default domain,
+<tt>domain1</tt>.</p>
+<ol>
+  <li>
+    <p><b>Add the <i>install-dir</i><tt>/bin/</tt> directory to the <tt>PATH</tt>
+environment variable.</b></p>
+  </li>
+  <li>
+    <p><b>Start the server by entering this command:</b></p>
+    <p><tt>asadmin start-domain domain1</tt></p>
+    <p>When you are prompted for the admin password and the master
+password, enter the passwords that you provided during installation.</p>
+    <p>When the start up process has completed,
+the following message appears:</p>
+    <p><tt>Domain domain1 started</tt></p>
+    <p>Each domain has a corresponding profile: enterprise, cluster, or
+developer. <tt>domain1</tt> is created with the default profile, which
+is defined in the <tt>AS_ADMIN_PROFILE</tt> variable defined in the <kbd>asadminenv.conf
+    </kbd> file. For more information on the three profiles see the
+Usage Profile section in <a
+ href="http://docs.sun.com/app/docs/doc/819-3671"><cite></cite></a><cite>Sun
+GlassFish Enterprise Server 2.1 Administration Guide</cite>. If <tt>domain1</tt>
+was created with developer profile, when you
+log in to the Admin Console, you cannot use features such as clustering
+and node agents. To use clusters and server instances, use the <kbd>create-domain</kbd>
+command to create a domain with cluster profile. For information on
+creating domains, type <kbd>asadmin create-domain</kbd> <kbd><span
+ style="font-weight: bold;">&#8211;&#8211;</span>help</kbd><a
+ href="http://docs.sun.com/app/docs/doc/819-3675"><cite></cite></a>.</p>
+    <br>
+    <p> </p>
+  </li>
+</ol>
+<a name="startwin"></a>
+<h3><img style="border: 0px solid ; width: 20px; height: 20px;"
+ src="graphics/procedure.gif" alt="Procedure">To Start the Domain on
+Windows</h3>
+<p>To start the Domain Administration Server, start the default domain,
+<tt>domain 1</tt>.</p>
+<ol>
+  <li>
+    <p><b>From the Explorer window or desktop, right click My Computer.</b></p>
+  </li>
+  <li>
+    <p><b>Choose Properties to display the System Properties dialog.</b></p>
+  </li>
+  <li>
+    <p><b>Click the Advanced tab.</b></p>
+  </li>
+  <li>
+    <p><b>Click Environment Variables.</b></p>
+  </li>
+  <li>
+    <p><b>In the User variables section:</b></p>
+    <ul>
+      <li>
+        <p><b>If a <tt>PATH</tt> variable exists, verify that <i>install-dir</i><tt>\bin</tt>
+exists in the path: <i>install-dir</i><tt>\bin;</tt><i>other_entries</i>.
+If <i>install-dir</i><tt>\bin</tt> does not exit in the PATH variable,
+add it.</b></p>
+      </li>
+      <li>
+        <p><b>If a <tt>PATH</tt> variable is not present, click New.
+In Variable Name, type <tt>PATH</tt>. In Variable Value, type the path
+to the server's <tt>bin</tt> directory: <i>install-dir</i><tt>\bin</tt>.
+Click OK to commit the change.</b></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><b>Add a new environment variable <tt>AS_ADMIN_USER</tt> and
+set it to the Administrative User Name that you assigned during
+installation. </b></p>
+  </li>
+  <li>
+    <p><b>Click OK to commit the change and close the remaining open
+windows.</b></p>
+  </li>
+  <li>
+    <p><b>Start the Application Server by clicking the Start Admin
+Server option within the Programs menu.</b></p>
+  </li>
+  <li>
+    <p><b>When a command prompt window opens to prompt you for the
+admin password and the master password, enter the passwords that you
+provided during installation.</b></p>
+    <p>A window appears with a message telling that you the server is
+starting:</p>
+    <p><tt>Starting Domain domain1,
+please wait. Log redirected to domain_dir\domain1\logs\server.log...</tt></p>
+    <p>When the startup process has completed, you see an additional
+message:</p>
+    <p><tt>Domain domain1 started.Press any key to continue ...</tt></p>
+Each domain has a corresponding profile: enterprise, cluster,
+or developer. <tt>domain1</tt> is created with the default profile,
+which is defined in the <tt>AS_ADMIN_PROFILE</tt> variable defined in
+the <kbd>asadminenv.conf</kbd> file. For more information on the three
+profiles, see the Usage Profile section in the <a
+ href="http://docs.sun.com/app/docs/doc/819-3671"><cite></cite></a><cite>Sun
+GlassFish Enterprise Server 2.1 Administration Guide</cite>. If <tt>domain1</tt>
+was created with developer profile, when you log in to the Admin
+Console, you cannot use features such as clustering and node agents.
+To use clusters and server instances, use the <kbd>create-domain</kbd>
+command to create a domain with cluster profile. For information on
+creating domains, type <kbd>asadmin create-domain</kbd> <kbd><b>&#8211;&#8211;</b>help</kbd><a
+ href="http://docs.sun.com/app/docs/doc/819-3675"><cite></cite></a>.</li>
+  <li>
+    <p><b>Press a key to close the message window.</b></p>
+  </li>
+</ol>
+<a name="login"></a>
+<h3><img style="border: 0px solid ; width: 20px; height: 20px;"
+ src="graphics/procedure.gif" alt="Procedure">To Log In to the Admin
+Console</h3>
+<p>The Admin Console is a browser interface that simplifies a variety
+of administration and configuration tasks. It is commonly
+used to:</p>
+<ul>
+  <li>
+    <p>Deploy and undeploy applications</p>
+  </li>
+  <li>
+    <p>Enable, disable, and manage applications</p>
+  </li>
+  <li>
+    <p>Configure resources and other server settings</p>
+  </li>
+  <li>
+    <p>Configure clusters and node agents</p>
+  </li>
+  <li>
+    <p>Manage server instances and clusters</p>
+  </li>
+  <li>
+    <p>Select and view log files</p>
+  </li>
+  <li>
+    <p>Configure load balancers </p>
+  </li>
+</ul>
+<p>For further information about using the Admin Console, consult the
+Application Server online help.&nbsp;</p>
+<ol>
+  <li>
+    <p><b>Type this URL in your browser:</b></p>
+    <p><tt>http://</tt> <i>localhost</i><tt>:4848<br>
+    </tt></p>
+    <p>If the browser is on a different system than the server, replace
+the <i>localhost</i> variable with the name of the system that the
+Domain Admin Server is running on.</p>
+    <p><tt>4848</tt> is the Admin Console's default port number. If you
+changed the port number during the installation, use that number
+instead. <br>
+If you have installed the cluster profile, the admin port is secure, by
+default. For cluster profile, the URL for Admin Console is <tt>https://</tt>
+    <i>localhost</i><tt>:4848</tt>. <br>
+    </p>
+    <hr noshade="noshade" size="1">
+    <p><b>Note - </b>If a popup window appears with a message such as <tt>Website
+Certified by an Unknown Authority</tt>, click OK.</p>
+    <p>This message appears because your browser does not recognize the
+self-signed
+certificate that the Domain Administration Server uses to service the
+Admin Console over the secure transmission protocol.</p>
+    <hr noshade="noshade" size="1"></li>
+  <li>
+    <p><b>When the log in window appears, enter the admin user name and
+password.</b></p>
+  </li>
+  <li>
+    <p><b>Click Login.</b></p>
+  </li>
+</ol>
+<a name="serverlog"></a>
+<h3><img style="border: 0px solid ; width: 20px; height: 20px;"
+ src="graphics/procedure.gif" alt="Procedure">To View the Domain
+Administration Server Log File</h3>
+<p>Application Server instances and the Domain Administration Server
+produce annotated logs on the file
+system. By default, all errors, warnings or useful informative messages
+are logged.</p>
+<ol>
+  <li>
+    <p><b>From the Common Tasks list in the right pane, click Search
+Log Files to launch a new browser window for Log Viewer.</b><br>
+    </p>
+  </li>
+  <li>
+    <p><b>In the Log Viewer window, select "server" from the Instance
+Name drop-down list and click Search.</b></p>
+    <p>The Domain Administration Server's recent log file entries are
+displayed.</p>
+  </li>
+  <li>
+    <p><b>Scan the messages and look for any <tt>WARNING</tt> or <tt>SEVERE</tt>
+messages indicating that problems were encountered during server
+startup.</b></p>
+    <p>You can close Log Viewer at any time. After you create clusters
+and deploy applications, examine log files if any of the
+operations failed. Use Log Viewer to view the log files of any running
+Application Server instance in the domain.</p>
+    <p>For more information about the log file, see the Configuring
+Logging chapter in <cite>Sun GlassFish Enterprise Server 2.1
+Administration Guide</cite>.</p>
+  </li>
+</ol>
+<a name="addclustersupport"></a>
+<h3><img style="border: 0px solid ; width: 20px; height: 20px;"
+ src="graphics/procedure.gif" alt="Procedure">Adding Cluster Support to
+a Domain<br>
+</h3>
+<br>
+<p>You can use the Admin Console add cluster support to a developer
+domain. </p>
+<ol type="1">
+  <li>
+    <p>Log on to the Admin Console. </p>
+  </li>
+  <li>
+    <p>From the left pane, click Application Server. </p>
+  </li>
+  <li>
+    <p>Click the Add Cluster Support button in the General tab.</p>
+  </li>
+  <li>
+    <p>The Add Cluster Support page appears. Review the information on
+this page and click OK. </p>
+  </li>
+  <li>
+    <p>In the Restart Required Page, click the Stop Instance button to
+stop the domain. </p>
+  </li>
+  <li>
+    <p>Log in to the machine where the domain is installed and run the
+following command: <kbd><var>install-dir</var>/bin/asadmin </kbd><kbd>list-domains</kbd>.
+Verify that the domain was stopped. </p>
+  </li>
+  <li>
+    <p>Run the following command: <kbd><var>install-dir</var>/bin/asadmin
+    </kbd><kbd>start-domain <var>&lt;domain-name&gt;</var></kbd> </p>
+    <p>The
+restarted domain supports clustering.</p>
+  </li>
+</ol>
+<br>
+&nbsp;<a name="next"></a>
+<h2>Where to Go Next</h2>
+<p>The next steps of the <i>Quick Start Guide</i> are available in the
+following chapters. </p>
+<p>These chapters are available only in the <i>Sun GlassFish
+Enterprise Server 2.1 Quick Start Guide</i> posted on docs.sun.com.</p>
+<ul>
+  <li>
+    <p>Chapter 2: Setting Up a Cluster<br>
+Steps for creating a cluster.</p>
+  </li>
+  <li>
+    <p>Chapter 3:&nbsp; Deploying An Application<br>
+Deploy a sample application to a cluster.<br>
+    </p>
+  </li>
+  <li>Chapter 4: Setting Up Load Balancing <br>
+Steps for creating and using a load balancer. Requires installation of
+the load balancer plug-in and the Web Server.<br>
+    <br>
+  </li>
+  <li>Chapter 5: Setting Up High Availability Failover<a
+ href="http://docs.sun.com/app/docs/doc/819-3193/6n5ea8v3v?a=view"><br>
+    </a>Steps for setting high availability failover. <br>
+  </li>
+</ul>
+<p>Other resources for learning about and using Application Server are
+available. They include:</p>
+<ul>
+  <li>
+    <p>Product details at <i>install-dir</i><tt>/docs/about.html</tt>.</p>
+    <p>See this document for the latest information on what is new, and
+pointers to tutorials and other educational services.</p>
+  </li>
+  <li>
+    <p>Sample applications at <i>install-dir</i><tt>/samples</tt></p>
+    <p>See the sample applications for Application Server examples.<span
+ style="text-decoration: underline;"><span style="font-style: italic;"></span></span></p>
+  </li>
+  <li><span style="text-decoration: underline;"><span
+ style="font-style: italic;"><a
+ href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html">Java
+EE 5 Tutorial</a><br>
+    </span></span></li>
+</ul>
+<div align="center"><br>
+&nbsp; <a href="copyright.html">Copyright</a> 1994-2008 Sun
+Microsystems </div>
+</body>
+</html>

@@ -1,0 +1,189 @@
+		              Open Message Queue
+                                   README
+                         -----------------------------
+                         Last updated: 14 October 2008
+
+This file provides a quick reference to Open Message Queue information 
+and customer resources.
+
+If you are installing Message Queue for the first time, please read the Message
+Queue Technical Overview, Release Notes, and Installation Guide before
+installing Open Message Queue.
+
+If you are upgrading the productfrom an earlier release, make sure to read the
+Release Notes and the upgrade information in Chapter 1 of the Installation
+Guide.
+  
+This file contains the following sections:
+
+PRODUCT INFORMATION
+INSTALLATON INSTRUCTIONS
+INSTRUCTIONS FOR UNINSTALLING MQ
+WHERE TO FIND PRODUCT DOCUMENTATION 
+WHERE TO FIND PRODUCT INFORMATION AND NEWS 
+WHERE TO SEND FEEDBACK AND QUESTIONS 
+WHERE TO GO NEXT
+
+===================================
+PRODUCT INFORMATION
+===================================
+
+Open Message Queue (OpenMQ) is the open source version of Sun Java(tm) System 
+Message Queue. It does not have its own documentation set  Features of OpenMQ are covered
+in the related Sun Java(tm) System Message Queue documentation or on the OpenMQ
+website (mq.dev.java.net).
+
+===================================
+INSTALLATION INSTRUCTIONS
+===================================
+
+To install Open Message Queue, use the installer application located at the top of the install
+diretory. 
+
+On unix based platforms:
+    <mq_install>/installer
+
+On windows based platforms:
+    <mq_install>/installer.vbs
+
+When the installer application is started, a graphical application will display allow 
+you to install and configure Message Queue.
+
+For a text based installer, you can run the installer on most platforms with the -t option.
+
+To script installation, run the installer with the [-n <file> ] argument. This will do a dry 
+run of the installation and track your answers in the passed in file.  You can then run the
+installer using this file.
+
+For example:
+     installer -n myanswers
+     installer -s -a myanswers
+
+===================================
+INSTRUCTIONS FOR UNINSTALLING MQ
+===================================
+
+To uninstall Open Message Queue, use the mquninstall application located in the mq/bin directory.
+
+On unix based platforms:
+    <mq_home>/mq/bin/mquninstall
+
+On windows based platforms:
+    <mq_home>/mq/bin/mqinstall.bat
+
+At the completion of the uninstall, some files will be left around including:
+* any message data 
+* log files from the product and the installation
+* files used by the uninstaller
+
+These files can be deleted if they are no longer deleted.
+
+
+===================================
+WHERE TO FIND PRODUCT DOCUMENTATION 
+===================================
+
+Documentation for the Open Message Queue 4.3 is covered in the Sun Java(tm) System 
+Message Queue 4.3 documentation which can be found on the following web site:
+
+	http://docs.sun.com/coll/1307.5
+
+Be sure to check the Documentation Center at that location for a topical
+reference to all books in the documentation set.
+
+Message Queue documentation components are in PDF and HTML format:
+
+  - PDF files can be viewed in your web browser (with an appropriate 
+    plugin) or in Adobe Acrobat Reader. Most recent browsers 
+    include the PDF reader plugin. If your browser does not, you 
+    can download the plugin from the browser vendor's web site or 
+    the Adobe web site at:
+        http://www.adobe.com/products/acrobat/readstep.html
+
+  - HTML files can be viewed in your web browser.
+
+DOCUMENTATION CENTER
+Provides an index and direct links to all topics covered in the product
+documentation.
+
+TECHNICAL OVERVIEW
+Explains the concepts, terminology, architecture, features, components, and
+other basics needed to use the Message Queue product.
+
+RELEASE NOTES
+Includes descriptions of new features, limitations, and known bugs, as well
+as technical notes.
+ 
+INSTALLATION GUIDE
+Explains how to install Sun Java(tm) System Message Queue on the Solaris, Linux, AIX, and Windows 
+platforms.
+
+To install Open Message Queue, use the instructions above.
+
+DEVELOPER'S GUIDE FOR JAVA CLIENTS
+For Java clients: Provides an introduction, a quick-start 
+tutorial, and programming information for developers of Java client programs
+using the Message Queue implementation of the JMS or SOAP/JAXM APIs. 
+
+ADMINISTRATION GUIDE
+Provides background and information needed to perform administration tasks
+using Message Queue administration tools.
+
+DEVELOPER'S GUIDE FOR C CLIENTS
+For C clients: Provides programming and reference documentation for developers
+of C client programs using the Message Queue C implementation of the
+JMS API (C-API).
+
+DEVELOPER'S GUIDE FOR JMX CLIENTS
+For JMX administration clients: Provides programming and reference documentation
+for developers of JMX client programs using the Message Queue JMX API.
+
+API DOCUMENTATION
+Includes standard JMS API documentation as well as Message-Queue-specific APIs 
+for Message Queue administered objects. This documentation is installed with 
+the product and can be found at the following location:
+
+    <mq_root>/mq/javadoc
+
+==========================================
+WHERE TO FIND PRODUCT INFORMATION AND NEWS 
+==========================================
+
+For the most current information on 
+    * Product News and Reviews 
+    * Release Notes and Product Documentation 
+    * Technical Support Contact Information
+
+Visit the product web site at:
+    http://mq.dev.java.net
+
+For answers to common questions about using the Open Message
+Queue product, see Frequently Asked Questions (FAQ) documentation at:
+    http://www.sun.com/software/products/message_queue/faqs_message_queue.html
+
+or the Open Message Queue/Sun Java(tm) System Message Queue Forum at: 
+    http://forums.sun.com/forum.jspa?forumID=711
+
+====================================
+WHERE TO SEND FEEDBACK AND QUESTIONS 
+====================================
+
+Questions or feedback on the product can be submitted to the product's user
+alias:
+    users@mq.dev.java.net
+
+Bugs and requests for features can be filed in IssueTracker which is available
+from the support section of mq.dev.java.net.
+
+================
+WHERE TO GO NEXT 
+================
+
+Please read the Message Queue Release Notes for supported platforms and
+products and for information specific to this release of the product. If you
+are new to the product, also read the Message Queue Technical Overview before
+using the procedure in the Message Queue Installation Guide to install the
+product.
+
+We recommend that you also check the FAQ documentation for answers 
+to common questions.

@@ -1,0 +1,13 @@
+@echo off
+REM
+REM  Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+REM
+
+setlocal
+call "@INSTALL_HOME@\config\ucenv.bat"
+set Path=%UPDATECENTER_HOME%\bin;%JDIC_LIB%;%PATH%
+
+:run
+"%JAVA_HOME%\bin\java" -Dcom.sun.updatecenter.home="%UPDATECENTER_HOME%" -cp "%UPDATECENTER_HOME%\lib\updatecenter.jar;%UPDATECENTER_HOME%\lib\updatecenter-gui.jar;%UPDATECENTER_HOME%\lib\updatecenter-javahelp.jar;%UPDATECENTER_HOME%\lib\jhall.jar;%UPDATECENTER_HOME%\lib\swing-layout-1.0.1.jar;%JDIC_STUB_LIB%\jdic_stub.jar;%UPDATECENTER_HOME%\lib\jdic\jdic.jar;%EXT_LIB%;%REGISTRATION_DIR%\registration-api.jar;%REGISTRATION_DIR%\registration-impl.jar" UpdateCenter  %* 
+if ERRORLEVEL 2 goto run
+endlocal

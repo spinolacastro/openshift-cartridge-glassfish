@@ -1,0 +1,61 @@
+default namespace = "http://java.sun.com/xml/ns/jbi/management-message"
+
+start =
+  element jbi-task {
+    attribute version { xsd:decimal },
+    jbi-task-result
+  }
+
+jbi-task-result =
+  element jbi-task-result {
+    frmwk-task-result,
+    component-task-result*
+  }
+
+frmwk-task-result =
+  element frmwk-task-result {
+    frmwk-task-result-details,
+    element is-cause-framework { "YES" | "NO"}?
+  }
+
+component-task-result = 
+  element component-task-result {
+    element component-name { text },
+    component-task-result-details
+  }
+
+
+frmwk-task-result-details = 
+  element frmwk-task-result-details {
+    task-result-details,
+    element locale { text }
+  }
+
+component-task-result-details = 
+  element component-task-result-details {
+    task-result-details
+  }
+
+task-result-details = 
+  element task-result-details {
+    element task-id { text },
+    element task-result { "SUCCESS" | "FAILED" },
+    element message-type { "ERROR" | "WARNING" | "INFO" }?,
+    element task-status-msg { msg-loc-info }*,
+    exception-info*
+  }
+
+msg-loc-info =
+  element msg-loc-info {
+    element loc-token { text },
+    element loc-message { text },
+    element loc-param { text }*   
+  }
+
+exception-info =
+  element exception-info {
+    element nesting-level { text }, 
+    msg-loc-info,   
+    element stack-trace { text }
+  }
+

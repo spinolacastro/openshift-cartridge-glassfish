@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+#  Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+#
+
+. "@INSTALL_HOME@/config/ucenv.conf"
+
+LD_LIBRARY_PATH="$UPDATECENTER_HOME/lib":"$JDIC_LIB":"$LD_LIBRARY_PATH";export LD_LIBRARY_PATH
+
+ret=1
+while [ "$ret" != "0" ]
+do
+"$JAVA_HOME"/bin/java -Dcom.sun.updatecenter.home="$UPDATECENTER_HOME" -cp "$UPDATECENTER_HOME/lib/updatecenter.jar:$UPDATECENTER_HOME/lib/updatecenter-gui.jar:$UPDATECENTER_HOME/lib/swing-layout-1.0.1.jar:$EXT_LIB/:$UPDATECENTER_HOME/lib/updatecenter-gui.jar:$UPDATECENTER_HOME/lib/updatecenter-javahelp.jar:$UPDATECENTER_HOME/lib/jhall.jar:$UPDATECENTER_HOME/lib/jdic/jdic.jar:$JDIC_STUB_LIB/jdic_stub.jar:$REGISTRATION_DIR/registration-api.jar:$REGISTRATION_DIR/registration-impl.jar" UpdateCenter  "${@}"
+ret=$?
+done

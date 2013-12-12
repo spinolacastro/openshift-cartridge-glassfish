@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright 2006 Sun Microsystems, Inc. All rights reserved.
+ Use is subject to license terms.
+-->
+
+
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">  
+  <display-name>clusterjsp</display-name>
+  <distributable/>
+  <servlet>
+    <display-name>HaJsp</display-name>
+    <servlet-name>HaJsp</servlet-name>    
+    <jsp-file>/HaJsp.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <display-name>ClearSession</display-name>
+    <servlet-name>ClearSession</servlet-name>    
+    <jsp-file>/ClearSession.jsp</jsp-file>
+  </servlet>
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>HaJsp.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

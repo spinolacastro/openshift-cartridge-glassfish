@@ -1,0 +1,60 @@
+.jmakiStack {
+  height: 100%;
+  border : 0px solid #000000;
+}
+
+.jmakiStackItem {
+  color : #000000;
+}
+
+.jmakiStackContent {
+  padding-top : 2px;
+  padding-bottom: 25px;
+}
+
+.jmakiStack ul {
+  list-style : none;
+  margin: 0;
+  padding: 0;
+}
+
+.jmakiStack li {
+
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7x;
+  /* -opera-border-radius: 7px; */
+  border-radius: 7px;
+  height : 45px;   /*CHANGE Anissa */
+  background : #FFFFFF;
+  border : 1px solid #000000;
+  padding : 2px;
+  margin-top : 2px;
+  margin-left : 2px;
+  margin-right : 2px;
+  overflow : hidden;
+}
+
+.jmakiStackNav {
+  position : relative;
+  bottom :0;
+  margin-top : -22px;
+  color : #eeeeee;
+  font-size : .7em;
+  text-decoration : underline;
+  cursor : pointer;
+  padding : 0px 5px 0px 5px;
+  height : 12px;
+}
+
+.jmakiStackNav .previous {
+  float : left;
+  visibility : hidden;
+}
+
+.jmakiStackNav .mid {
+}
+
+.jmakiStackNav .next {
+  float: right;
+  visibility : hidden;
+}

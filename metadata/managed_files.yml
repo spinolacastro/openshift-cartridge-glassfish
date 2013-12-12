@@ -1,0 +1,7 @@
+---
+locked_files:
+- env/
+processed_templates:
+- 'versions/*/imq/lib/props/broker/default.properties.erb'
+- 'versions/*/domains/domain1/jbi/config/jbi-registry.xml.erb'
+- 'versions/*/domains/domain1/config/sun-acc.xml.erb'

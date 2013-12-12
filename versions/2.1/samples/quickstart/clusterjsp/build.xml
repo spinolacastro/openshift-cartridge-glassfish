@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+ The contents of this file are subject to the terms
+ of the Common Development and Distribution License
+ (the License).  You may not use this file except in
+ compliance with the License.
+
+ You can obtain a copy of the license at
+ https://glassfish.dev.java.net/public/CDDLv1.0.html or
+ glassfish/bootstrap/legal/CDDLv1.0.txt.
+ See the License for the specific language governing
+ permissions and limitations under the License.
+
+ When distributing Covered Code, include this CDDL
+ Header Notice in each file and include the License file
+ at glassfish/bootstrap/legal/CDDLv1.0.txt.
+ If applicable, add the following below the CDDL Header,
+ with the fields enclosed by brackets [] replaced by
+ you own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+
+ Copyright 2006 Sun Microsystems, Inc. All rights reserved.
+-->
+
+<!DOCTYPE project [ <!ENTITY include SYSTEM "../../common-ant.xml"> ]>
+
+<project name="createcluster" default="message" basedir=".">
+
+  <property name="sample.home" value="../.."/>
+  <property name="binary.name" value="clusterjsp" />
+  <target name="init" depends="setup_env, checkPlatform, configUnix, configWindows"/>
+
+  <!-- ======================================================= -->
+  <!--                Include common-ant.xml                   -->
+  <!-- ======================================================= -->
+  &include;
+
+
+  <!-- ======================================================= -->
+  <!--            Cluster/Domain properties .                  -->
+  <!--            Read from cluster.properties file    -->
+  <!-- ======================================================= -->
+
+  <property file="${sample.home}/quickstart/clusterjsp/cluster.properties"/>
+  <property name="admin.password.file" value="${sample.home}/password.txt" />
+  
+  <target name="message">
+      <echo message="Please read the EE setup instructions in ./ee-setup.html to decide what kind of cluster setup you need before proceeding."/>
+  </target> 
+
+ <!-- Targets to setup cluster on one machine -->
+  <target name="setup-one-machine-cluster" depends="create_cluster,create_nodeagent,start_nodeagent,create_instance1,create_instance2"/>
+  <!-- target name="setup-one-machine-cluster" depends="create_cluster,create_nodeagent,start_nodeagent,create_instance1,create_instance2,start_cluster"/ -->
+  <target name="setup-one-machine-cluster-and-configure-mq" depends="setup-one-machine-cluster, configure-jms-hosts-in-as-cluster"/>
+  <target name="configure-mq" depends="configure-jms-hosts-in-as-cluster" />
+
+    <!-- Targets to setup cluster on two machines -->
+  <target name="setup-remote-machine-for-2-machine-cluster" depends="create_nodeagent_remote,start_nodeagent_remote"/>
+  <target name="setup-local-machine-for-2-machine-cluster" depends="create_cluster,create_nodeagent,start_nodeagent,create_instance1,create_instance_remote,start_cluster"/>
+
+  <!-- Create the cluster to be configured for High Availability -->
+  <target name="create_cluster" depends="init" description="Creating the Application Server Cluster">
+	<echo message="Creating cluster ${cluster.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-cluster"/>
+          <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>	  
+	  <arg line=" ${cluster.extraargs}"/>
+	  <arg line=" ${cluster.name}"/>
+       </exec>
+  </target>
+
+  <!-- Start the cluster to be configured for High Availability -->
+  <target name="start_cluster" depends="init" description="Starting the Application Server Cluster">
+	<echo message="Starting cluster ${cluster.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" start-cluster"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${cluster.extraargs}"/>
+	  <arg line=" ${cluster.name}"/>
+       </exec>
+  </target>
+
+  <!-- set master password in password file -->
+  <target name="setmasterpassword" depends="init_common, envmasterpassword, readmasterpassword">
+    <echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${admin.password.file}" />
+    <echo message="AS_ADMIN_MASTERPASSWORD=${master.password}" file="${admin.password.file}" append="true" />
+  </target>
+
+  <target name="envmasterpassword" if="as.env.AS_ADMIN_MASTERPASSWORD" >
+    <property name="master.password" value="${as.env.AS_ADMIN_MASTERPASSWORD}"/>
+  </target>
+
+  <target name="readmasterpassword"  unless="master.password" >
+    <sun-appserv-input message="Please Enter app-server Master Password : " addproperty="master.password" />
+    <echo message="master.password=${master.password}${line.separator}" file="${sample.home}/quickstart/clusterjsp/cluster.properties" append="true" />
+    <echo message="Master password has been set in ${com.sun.aas.installRoot}/quickstart/common.properties file for future use." />
+  </target>
+
+  <target name="restart.EE.server" depends="setup_env, setmasterpassword">
+         <echo message="Stopping domain ${domain.name}"/>
+       <sun-appserv-admin explicitcommand="stop-domain ${domain.name}" />
+       <echo message="Starting domain ${domain.name}"/>
+       <sun-appserv-admin explicitcommand="start-domain --user ${admin.user} --passwordfile=&quot;${admin.password.file}&quot; ${domain.name}" />
+  </target>
+
+  <!-- Create the Node Agent process -->
+  <target name="create_nodeagent" depends="init" description="Creating the Node Agent">
+        <antcall target="setmasterpassword"/>
+        <echo message="Creating the node agent ${nodeagent.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-node-agent"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${nodeagent.extraargs}"/>
+	  <arg line=" ${nodeagent.name}"/>
+       </exec>
+  </target>
+
+  <!-- Start the node agent process -->
+  <target name="start_nodeagent" depends="init" description="Start the Node Agent">
+        <antcall target="setmasterpassword"/>
+        <echo message="Start the node agent ${nodeagent.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" start-node-agent"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${nodeagent.extraargs}"/>
+	  <arg line=" ${nodeagent.name}"/>
+       </exec>
+  </target>
+
+  <target name="generate-passwordfile-for-creating-remote-nodeagent" depends="envmasterpassword, readmasterpassword">
+     <echo message="AS_ADMIN_PASSWORD=${das.adminpassword}${line.separator}" file="${admin.password.file}" />
+     <echo message="AS_ADMIN_MASTERPASSWORD=${master.password}" file="${admin.password.file}" append="true"/>
+  </target>
+
+  <!-- Create the remote Node Agent process -->
+  <target name="create_nodeagent_remote" depends="init,generate-passwordfile-for-creating-remote-nodeagent" description="Creating the Node Agent">
+        <echo message="Creating the node agent ${nodeagent-remote.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-node-agent"/>
+	  <arg line=" --host ${das.host}"/>
+	  <arg line=" --port ${das.port}"/>
+	  <arg line=" --user ${das.adminuser}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${nodeagent-remote.extraargs}"/>
+	  <arg line=" ${nodeagent-remote.name}"/>
+       </exec>
+  </target>
+
+  <!-- Start the remote node agent process -->
+  <target name="start_nodeagent_remote" depends="init,generate-passwordfile-for-creating-remote-nodeagent" description="Start the Node Agent">
+        <echo message="Start the node agent ${nodeagent-remote.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" start-node-agent"/>
+	  <arg line=" --user ${das.adminuser}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${nodeagent-remote.extraargs}"/>
+	  <arg line=" ${nodeagent-remote.name}"/>
+       </exec>
+  </target>
+  
+  <!-- Create instance1 in the cluster --> 
+  <target name="create_instance1" depends="init" description="Creating the Application Server Instances">
+      <echo message="Creating instance ${instance1.name} "/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-instance"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" --cluster ${cluster.name}"/>
+	  <arg line=" --nodeagent ${nodeagent.name}"/>
+	  <arg line=" --systemproperties JMX_SYSTEM_CONNECTOR_PORT=${instance1.jmxsystem.port}:IIOP_LISTENER_PORT=${instance1.orblist.port}:IIOP_SSL_LISTENER_PORT=${instance1.ssl.port}:IIOP_SSL_MUTUALAUTH_PORT=${instance1.ssl.mutauth.port}:HTTP_LISTENER_PORT=${instance1.http.port}:HTTP_SSL_LISTENER_PORT=${instance1.https.port}"/>
+	  <arg line=" ${instance1.extraargs}"/>
+	  <arg line=" ${instance1.name}"/>
+       </exec>
+
+  </target>
+  
+  <!-- Create instance2 in the cluster --> 
+  <target name="create_instance2" depends="init" description="Creating the Application Server Instances">
+      <echo message="Creating instance ${instance2.name} "/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-instance"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" --cluster ${cluster.name}"/>
+	  <arg line=" --nodeagent ${nodeagent.name}"/>
+	  <arg line=" --systemproperties JMX_SYSTEM_CONNECTOR_PORT=${instance2.jmxsystem.port}:IIOP_LISTENER_PORT=${instance2.orblist.port}:IIOP_SSL_LISTENER_PORT=${instance2.ssl.port}:IIOP_SSL_MUTUALAUTH_PORT=${instance2.ssl.mutauth.port}:HTTP_LISTENER_PORT=${instance2.http.port}:HTTP_SSL_LISTENER_PORT=${instance2.https.port}"/>
+	  <arg line=" ${instance2.extraargs}"/>
+	  <arg line=" ${instance2.name}"/>
+       </exec>
+
+  </target>
+
+  <!-- Create remote instance in the cluster --> 
+  <target name="create_instance_remote" depends="init" description="Creating the Application Server Instance on remote machine">
+      <echo message="Creating remote instance ${instance2.name} "/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" create-instance"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" --cluster ${cluster.name}"/>
+	  <arg line=" --nodeagent ${nodeagent-remote.name}"/>
+	  <arg line=" --systemproperties JMX_SYSTEM_CONNECTOR_PORT=${instance2.jmxsystem.port}:IIOP_LISTENER_PORT=${instance2.orblist.port}:IIOP_SSL_LISTENER_PORT=${instance2.ssl.port}:IIOP_SSL_MUTUALAUTH_PORT=${instance2.ssl.mutauth.port}:HTTP_LISTENER_PORT=${instance2.http.port}:HTTP_SSL_LISTENER_PORT=${instance2.https.port}"/>
+	  <arg line=" ${instance2.extraargs}"/>
+	  <arg line=" ${instance2.name}"/>
+       </exec>
+
+  </target>
+
+  <!-- ==================================================================== -->
+  <!--  Sun Java (tm) System Application Server Enterprise Edition 8.1 2005Q1 -->
+  <!--            Sample Application   build.xml            		    -->
+  <!--           for Cluster HA JSP sample application      		    -->
+  <!-- ==================================================================== -->
+
+  <property name="sample.name" value="clusterjsp"/>
+  <property name="app.pkg" value=""/>
+  <property name="war.pkg" value="cluster"/>  
+  <property name="application.type.ear" value="true"/>
+
+  <!-- ==================================================== -->
+  <!--             EE properties                            -->
+  <!-- ==================================================== -->
+  <property name="extraargs.1" value="--target ${cluster.name}"/>
+  <property name="extraargs.2" value="--availabilityenabled=true"/>
+
+  <!-- ======================================================= -->
+  <!--		Tagets to build and deploy sample application      -->
+  <!-- ======================================================= --> 
+
+  <target name="core"     depends="init_common,core_all_common,create_ear_common,copy_ear_common"/> 
+  <target name="deploy"   depends="select_binary_common, deploy_common"/> 
+  <target name="undeploy" depends="init_common, undeploy_common"/>
+
+  <target name="clean"    depends="clean_all_common"/> 
+  <target name="javadocs" depends="javadocs_noop_common"/>
+  <target name="verify"   depends="select_binary_common,verify_common"/>
+  <target name="all-app"      depends="core,javadocs,verify,deploy"/>
+
+   <!-- Create an MQ cluster. This task would be started in a separate console and then in a different console,
+   the user would need to configure MQ cluster in the application server -->
+  <target name="create-mq-cluster" depends="init" description="Configuring an MQ cluster for an Application Server cluster">
+        <echo message="Configuring an MQ cluster  for cluster ${cluster.name}. This may take some time. "/>
+        <!-- create two external MQ brokers in a cluster -->
+        <antcall target="start-external-brokerCluster" />
+  </target>
+ 
+  <target name="start-external-brokerCluster" depends="init" description="Configuring an external SJSMQ broker cluster">
+    <echo message="Configuring an external MQ broker cluster" />
+    <parallel>
+      <antcall target="start-mq-cluster-broker1"/>
+      <antcall target="start-mq-cluster-broker2"/>
+    </parallel>
+ 
+    <waitfor maxwait="1" maxwaitunit="minute" checkevery="500">
+       <http url="http://${admin.host}:${admin.port}"/>
+     </waitfor>
+  </target>
+ 
+                                                                                                                                               
+  <target name="start-mq-master-broker1" depends="init">
+     <echo message="Starting broker ${cluster.name} ${mqbroker1.name}"/>
+     <exec executable="${com.sun.aas.imqInstallDir}/bin/imqbrokerd" failonerror="true">
+       <env key="IMQ_VARHOME" value="${com.sun.aas.imqHome}"/>
+       <arg line=" -tty"/>
+       <arg line=" -name ${mqbroker3.name}"/>
+       <arg line=" -port ${mqbroker3.port}"/>
+       <arg line=" -cluster ${admin.host}:${mqbroker1.port},${admin.host}:${mqbroker2.port},${admin.host}:${mqbroker3.port}"/>
+       <arg line=" -Dimq.cluster.masterbroker=localhost:${mqbroker3.port}"/>
+       <arg line=" -bgnd"/>
+       <arg line=" -javahome ${com.sun.aas.javaRoot}"/>
+     </exec>
+  </target>
+ 
+ 
+  <target name="start-mq-cluster-broker1" depends="init">
+     <echo message="Starting broker ${cluster.name} ${mqbroker1.name}"/>
+     <exec executable="${com.sun.aas.imqInstallDir}/bin/imqbrokerd" failonerror="true">
+       <env key="IMQ_VARHOME" value="${com.sun.aas.imqHome}"/>
+       <arg line=" -tty"/>
+       <arg line=" -name ${mqbroker1.name}"/>
+       <arg line=" -port ${mqbroker1.port}"/>
+       <arg line=" -cluster ${admin.host}:${mqbroker1.port},${admin.host}:${mqbroker2.port},${admin.host}:${mqbroker3.port}"/>
+       <arg line=" -Dimq.cluster.masterbroker=localhost:${mqbroker3.port}"/>
+       <arg line=" -bgnd"/>
+       <arg line=" -javahome ${com.sun.aas.javaRoot}"/>
+     </exec>
+  </target>
+ 
+  <target name="start-mq-cluster-broker2" depends="init">
+     <echo message="Starting broker cluster2 ${mqbroker2.name}"/>
+     <exec executable="${com.sun.aas.imqInstallDir}/bin/imqbrokerd" failonerror="true" >
+       <env key="IMQ_VARHOME" value="${com.sun.aas.imqHome}"/>
+       <arg line=" -tty"/>
+       <arg line=" -name ${mqbroker2.name}"/>
+       <arg line=" -port ${mqbroker2.port}"/>
+       <arg line=" -cluster ${admin.host}:${mqbroker1.port},${admin.host}:${mqbroker2.port},${admin.host}:${mqbroker3.port}"/>
+       <arg line=" -Dimq.cluster.masterbroker=localhost:${mqbroker3.port}"/>
+       <arg line=" -bgnd"/>
+       <arg line=" -javahome ${com.sun.aas.javaRoot}"/>
+     </exec>
+  </target>    
+ 
+  <target name="set-default-jms-host-to-broker1" depends="init">
+       <echo message="Setting default JMS host to ${mqbroker.name}"/>
+       <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line=" set "/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+          <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" ${cluster.name}-config.jms-service.default-jms-host=${mqbroker.name}"/>
+       </exec>
+  </target>
+ 
+ 
+  <target name="configure-jms-hosts-in-as-cluster" depends="init">     
+      <antcall target="delete-jms-host-common">
+            <param name="mqbroker.name" value="default_JMS_host"/>
+      </antcall>
+      <antcall target="create-jms-host-common">
+            <param name="mqbroker.port" value="7678"/>
+            <!-- ${mqbroker1.name} -->
+            <param name="mqbroker.name" value="samplesbroker1"/>
+      </antcall>
+      <antcall target="create-jms-host-common">
+            <param name="mqbroker.port" value="7679"/>
+            <!-- ${mqbroker2.name} -->
+            <param name="mqbroker.name" value="samplesbroker2"/>
+      </antcall>
+      <antcall target="set-default-jms-host-to-broker1">
+            <param name="mqbroker.name" value="samplesbroker1"/>
+      </antcall>
+  </target>
+ 
+  <target name="delete-jms-host-common" depends="init">
+       <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line="delete-jms-host"/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+          <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" --target ${cluster.name}"/>
+          <arg line=" ${mqbroker.name}"/>
+       </exec>
+  </target>
+ 
+  <target name="create-jms-host-common" depends="init">
+       <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line="create-jms-host"/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+          <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" --target ${cluster.name}"/>
+          <arg line=" --mqhost ${admin.host}"/>
+          <arg line=" --mqport ${mqbroker.port}"/>
+          <arg line=" --mquser admin"/>
+          <arg line=" --mqpassword admin"/>
+          <arg line=" ${mqbroker.name}"/>
+       </exec>
+  </target>
+
+   <!-- Stop the cluster  -->
+   <target name="stop_cluster" depends="init" description="Stopping the Application Server Cluster">
+	<echo message="Stopping cluster ${cluster.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" stop-cluster"/>
+	  <arg line=" --host ${admin.host}"/>
+	  <arg line=" --port ${admin.port}"/>
+	  <arg line=" --user ${admin.user}"/>
+	  <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${cluster.extraargs}"/>
+	  <arg line=" ${cluster.name}"/>
+        </exec>
+   </target>
+      
+   <!-- Stop the node agent process -->
+   <target name="stop_nodeagent" depends="init" description="Stop the Node Agent">
+        <echo message="Stopping node agent ${nodeagent.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line=" stop-node-agent"/>
+	  <arg line=" ${nodeagent.extraargs}"/>
+	  <arg line=" ${nodeagent.name}"/>
+        </exec>
+   </target>
+  
+   <!-- Delete instance-ONE -->
+   <target name="delete_instance1" depends="init,stop_cluster" description="Delete instance instance-ONE">
+        <echo message="Deleting instance ${instance1.name}"/>
+        <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line=" delete-instance"/>
+          <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+          <arg line=" ${instance1.extraargs}"/>
+          <arg line=" ${instance1.name}"/>
+        </exec>
+   </target> 
+
+   <!-- Delete instance-TWO -->
+   <target name="delete_instance2" depends="init,stop_cluster" description="Delete instance instance-TWO">
+     <echo message="Deleting instance ${instance2.name}"/>
+     <exec executable="${exec.asadmin}">
+       <arg line="${exec.asadmin.part2}"/>
+       <arg line=" delete-instance"/>
+       <arg line=" --host ${admin.host}"/>
+       <arg line=" --port ${admin.port}"/>
+       <arg line=" --user ${admin.user}"/>
+       <arg line=" --passwordfile ${admin.password.file}"/>
+       <arg line=" ${instance2.extraargs}"/>
+       <arg line=" ${instance2.name}"/>
+     </exec>
+   </target> 
+
+   <!-- Delete the cluster  -->
+   <target name="delete_cluster" depends="init,delete_instance1,delete_instance2" description="Deleting the Application Server Cluster">
+      <echo message="Deleting cluster ${cluster.name}"/>
+      <exec executable="${exec.asadmin}">
+        <arg line="${exec.asadmin.part2}"/>
+        <arg line=" delete-cluster"/>
+        <arg line=" --host ${admin.host}"/>
+        <arg line=" --port ${admin.port}"/>
+        <arg line=" --user ${admin.user}"/>
+        <arg line=" --passwordfile ${admin.password.file}"/>
+        <arg line=" ${cluster.extraargs}"/>
+        <arg line=" ${cluster.name}"/>
+     </exec>
+   </target>
+
+   <!-- Delete the node agent process -->
+   <target name="delete_nodeagent" depends="init,delete_cluster,stop_nodeagent" description="Delete the Node Agent">
+        <echo message="Deleting node agent ${nodeagent.name}"/>
+	<exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" delete-node-agent"/>
+	  <arg line=" ${nodeagent.extraargs}"/>
+	  <arg line=" ${nodeagent.name}"/>
+        </exec>
+   </target>
+      
+   <!-- Delete the node agent Config process -->
+   <target name="delete_nodeagent_config" depends="init,delete_nodeagent" description="Delete the Node Agent Config">
+     <echo message="Deleting node agent Config ${nodeagent.name}"/>
+     <exec executable="${exec.asadmin}">
+	  <arg line="${exec.asadmin.part2}"/>
+	  <arg line=" delete-node-agent-config"/>
+	  <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+	  <arg line=" ${nodeagent.extraargs}"/>
+	  <arg line=" ${nodeagent.name}"/>
+        </exec>
+   </target>
+      
+   <!-- Stop the remote node agent process -->
+   <target name="stop_remote_nodeagent" description="Stop the Remote Node Agent">
+      <echo message="Stopping node agent ${nodeagent-remote.name}"/>
+          <exec executable="${exec.asadmin}">
+          <arg line=" stop-node-agent"/>
+          <arg line=" ${nodeagent-remote.extraargs}"/>
+          <arg line=" ${nodeagent-remote.name}"/>
+        </exec>
+   </target>
+
+   <!-- Delete the remote node agent process -->
+   <target name="delete_remote_nodeagent" depends="stop_remote_nodeagent" description="Delete the Remote Node Agent">
+        <echo message="Deleting remote node agent ${nodeagent-remote.name}"/>
+        <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line=" delete-node-agent"/>
+          <arg line=" ${nodeagent-remote.extraargs}"/>
+          <arg line=" ${nodeagent-remote.name}"/>
+        </exec>
+   </target>
+
+   <!-- Delete the remote node agent Config process -->
+   <target name="delete_remote_nodeagent_config" depends="delete_remote_nodeagent" description="Delete the remote node agent config">
+    <echo message="Deleting remote node agent Config ${nodeagent-remote.name}"/>
+        <exec executable="${exec.asadmin}">
+          <arg line="${exec.asadmin.part2}"/>
+          <arg line=" delete-node-agent-config"/>
+	  <arg line=" --host ${admin.host}"/>
+          <arg line=" --port ${admin.port}"/>
+          <arg line=" --user ${admin.user}"/>
+          <arg line=" --passwordfile ${admin.password.file}"/>
+          <arg line=" ${nodeagent-remote.extraargs}"/>
+          <arg line=" ${nodeagent-remote.name}"/>
+        </exec>
+   </target>
+ 
+   <!-- Clean cluster process -->
+   <target name="clean-one-machine-cluster" depends="init,delete_nodeagent_config" description="Stop and delete instances, cluster and nodeagent"/>
+   <target name="clean-one-machine-cluster-delete-mq" depends="init,delete-mq,clean-one-machine-cluster" description="Clean the cluster and delete the MQ Brokers created"/>
+   <target name="delete-mq" depends="init" description="Delete the created brokers">
+     <antcall target="delete-jms-host-common">
+       <param name="mqbroker.name" value="samplesbroker1"/>
+     </antcall>
+     <antcall target="delete-jms-host-common">
+       <param name="mqbroker.name" value="samplesbroker2"/>
+     </antcall>
+   </target>
+
+   <!-- Clean cluster process for two-machine-setup -->
+   <target name="clean-local-machine-for-2-machine-cluster" depends="stop_cluster,delete_nodeagent_config,delete_remote_nodeagent_config"/>
+   <target name="clean-remote-2-machine-cluster" depends="init,delete_remote_nodeagent" description="Stop and Deletes the remote node agent"/>
+
+ </project>
+
+<!--
+# The important log files are as follows:
+#     1) DAS (server):   domains/test-domain/logs/server.log
+#     2) node agent:     node-agents/test-agent/agent/logs/server.log
+#     3) test-server:    node-agents/test-agent/test-server/logs/server.log
+#     4) cluster-server: node-agents/test-agent/cluster-server/logs/server.log
+#     5) MQ broker1 log: domains/domain1/imq/instances/samplesbroker1/log/log.txt
+#     6) MQ broker2 log: domains/domain1/imq/instances/samplesbroker2/log/log.txt
+
+
+# The system can be shutdown as follows:
+#     1) asadmin stop-instance test-server
+#     2) asadmin stop-cluster test-cluster
+#     3) asadmin stop-domain test-domain
+#     4) kill any remaining java processes (i.e. the Node Agent)
+
+# The domain can be deleted as follows:
+#     1) asadmin stop-instance test-server
+#     2) asadmin stop-cluster test-cluster
+#     3) asadmin delete-instance test-server
+#     4) asadmin delete-instance cluster-server
+#     5) asadmin delete-cluster test-cluster
+#     6) asadmin stop-domain test-domain
+#     7) kill any remaining java processes (i.e. the Node Agent)
+#     8) asadmin delete-nodeagent test-agent
+#        verify that nodeagents/test-agent has been deleted
+#     9) asadmin delete-domain test-domain
+#        verify that domains/test-domain has been deleted
+-->
+

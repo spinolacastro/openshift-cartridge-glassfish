@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oor:component-schema oor:version="1.1" oor:name="CreateSOA" oor:package="com.sun.install.L10nSelection"
+ xsi:schemaLocation="http://openoffice.org/2001/registry"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:oor="http://openoffice.org/2001/registry"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xml:lang='en-US'>
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICE OR THIS HEADER.
+
+ Copyright 2006, 2007 Sun Microsystems, Inc. All rights reserved.
+ Use is subject to license terms.
+
+ The contents of this file are subject to the terms of the Common Development
+ and Distribution License("CDDL") (the "License"). You may not use this file
+ except in compliance with the License.
+
+ You can obtain a copy of the License at https://openinstaller.dev.java.net/license.html
+ or http://openinstaller.dev.java.net/license.txt . See the License for the
+ specific language governing permissions and limitations under the License.
+
+ When distributing the Covered Code, include this CDDL Header Notice in each
+ file and include the License file at http://openinstaller.dev.java.net/license.txt .
+ If applicable, add the following below this CDDL Header, with the fields
+ enclosed by brackets [] replaced by your own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+
+ ident "@(#)%Name% %Revision% %Date% SMI"
+
+-->
+ <component>
+     <group oor:name="userinfo">
+
+        <prop oor:name="EMAIL" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+            <value/>
+
+            <info>
+                <desc xml:lang="en-US">Email Address</desc>
+            </info>
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty, true);
+          ]]></onSet>
+        </actions>
+        </prop>
+
+        <prop oor:name="PASSWORD" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+            <value/>
+
+	    <!--
+            <constraints>
+                <minLength oor:value="6"/>
+                <maxLength oor:value="10"/>
+            </constraints>
+	    -->
+    
+            <info>
+                <desc xml:lang="en-US">User Password</desc>
+            </info>
+
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty, true);
+          ]]></onSet>
+        </actions>
+        </prop>
+
+        <prop oor:name="RETYPEPASSWORD" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+            <value/>
+
+            <info>
+                <desc xml:lang="en-US">Retype User Password</desc>
+            </info>
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty, true);
+
+String myValue = (String)thisProperty.getUnconfirmedValue();
+String password = (String)ConfigHelper.getValue("CreateSOA.userinfo.PASSWORD");
+
+if (!myValue.equals(password)) {
+    ConfigHelper.setValue("CreateSOA.userinfo.STATUS", "ERROR");
+    throw new EnhancedException("MQ_PASSWORDS_DO_NOT_MATCH", new String[]{});
+}
+
+          ]]></onSet>
+        </actions>
+        </prop>
+
+        <prop oor:name="FIRSTNAME" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">First Name</desc>
+          </info>
+
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty, true);
+          ]]></onSet>
+        </actions>
+        </prop>
+
+        <prop oor:name="LASTNAME" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">Last Name</desc>
+          </info>
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty, true);
+          ]]></onSet>
+        </actions>
+        </prop>
+
+        <prop oor:name="COUNTRY" oor:type="xs:string" oor:transient="true" oor:nillable="false">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">Country</desc>
+          </info>
+        <actions>
+          <onSet><![CDATA[
+createSOACheckNullEmpty(thisProperty);
+setCountryToSend(thisProperty);
+          ]]></onSet>
+        </actions>
+        </prop>
+
+	<prop oor:name="DUMMY_PROP" oor:type="xs:string" oor:transient="true">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">Dummy Field</desc>
+          </info>
+        <actions>
+          <onSet><![CDATA[
+import org.openinstaller.provider.conf.ConfigHelper;
+
+String inputStatus = (String)ConfigHelper.getValue("CreateSOA.userinfo.STATUS");
+if ((inputStatus != null) && (inputStatus.equals("ERROR")))  {
+    ConfigHelper.setValue("CreateSOA.userinfo.STATUS", "");
+}
+          ]]></onSet>
+        </actions>
+        </prop>
+
+	<prop oor:name="STATUS" oor:type="xs:string" oor:transient="true">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">Status</desc>
+          </info>
+        </prop>
+
+	<prop oor:name="COUNTRY_SEND" oor:type="xs:string" oor:transient="true">
+          <value/>
+          <info>
+            <desc xml:lang="en-US">Country_Send</desc>
+          </info>
+        </prop>
+
+
+     </group>
+ </component>
+</oor:component-schema>
+

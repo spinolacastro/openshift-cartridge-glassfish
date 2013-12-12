@@ -1,0 +1,10 @@
+rem
+rem  Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+rem
+
+set UPDATECENTER_HOME=@INSTALL_HOME@
+set JAVA_HOME=%JAVA_HOME%
+set EXT_LIB=@EXT_LIB@
+set JDIC_LIB=@JDIC_LIB@
+set JDIC_STUB_LIB=@JDIC_STUB_LIB@
+set REGISTRATION_DIR=@REGISTRATION_DIR@

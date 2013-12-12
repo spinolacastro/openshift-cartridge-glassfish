@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+ Copyright 2006 Sun Microsystems, Inc. All rights reserved.
+ Use is subject to license terms.
+-->
+
+<!DOCTYPE project [ <!ENTITY include SYSTEM "../../../../samples/common-ant.xml"> ]>
+
+  <!-- ==================================================================== -->
+  <!--  Sun Java (tm) System Application Server Enterprise Edition 8.1 2005Q1 -->
+  <!--            Sample Application   build.xml            		    -->
+  <!--           for Cluster HA JSP sample application      		    -->
+  <!-- ==================================================================== -->
+
+<project name="clusterhajsp" default="core" basedir=".">
+
+  <property name="sample.home" value="../../../../samples"/>
+  
+  <!--
+  <property name="app.pkg" value=""/>
+  <property name="war.pkg" value="cluster"/>
+  <property name="apptype"  value="web"/>
+  -->
+
+  <!-- ==================================================== -->
+  <!--             Java Doc properties                      -->
+  <!-- ==================================================== -->
+  <property name="javadoc.pkgnames" value="cluster.*" />
+
+  <!-- ==================================================== -->
+  <!--       include common.xml                             -->
+  <!-- ==================================================== -->
+  &include;
+
+  <!-- ==================================================== -->
+  <!--   Targets to build and deploy sample application     -->
+  <!-- ==================================================== -->
+
+  <target name="clean" depends="clean_common"/>
+  
+  <target name="javadocs"   depends="javadocs_noop_common"/>
+  
+  <target name="war" depends="init_common,create_war_common"/>
+  
+  <target name="core" depends="war" />
+  <target name="all" depends="core,javadocs"/>
+
+</project>

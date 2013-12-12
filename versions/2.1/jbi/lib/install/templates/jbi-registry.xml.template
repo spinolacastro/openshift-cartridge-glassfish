@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jbi xmlns="http://java.sun.com/xml/ns/jbi/registry">
+
+    <components>
+        <component name="sun-http-binding" file-name="httpbc.jar" timestamp="0" default-install="true"/>
+        <component name="sun-javaee-engine" file-name="appserv-jbise.jar" timestamp="0" default-install="true"/>
+    </components>
+
+    <shared-libraries>
+        <shared-library name="sun-wsdl-library" file-name="wsdlsl.jar" timestamp="0" default-install="true"/>
+    </shared-libraries>
+    
+    <servers>
+        <server name-ref="@JBI_INSTANCE_NAME@">
+            
+            <component-ref name-ref="sun-http-binding" 
+                            state="Shutdown" 
+                            install-root="@JBI_INSTANCE_ROOT@/jbi/components/sun-http-binding/install_root"
+                            workspace="@JBI_INSTANCE_ROOT@/jbi/components/sun-http-binding/install_root/workspace">
+            </component-ref>
+
+            <component-ref name-ref="sun-javaee-engine" 
+                            state="Shutdown" 
+                            install-root="@JBI_INSTANCE_ROOT@/jbi/components/sun-javaee-engine/install_root"
+                            workspace="@JBI_INSTANCE_ROOT@/jbi/components/sun-javaee-engine/install_root/workspace">
+            </component-ref>            
+            
+            <shared-library-ref name-ref="sun-wsdl-library" 
+                            install-root="@JBI_INSTANCE_ROOT@/jbi/shared-libraries/sun-wsdl-library/install_root"/>
+            
+        </server>
+    </servers>
+    
+</jbi>

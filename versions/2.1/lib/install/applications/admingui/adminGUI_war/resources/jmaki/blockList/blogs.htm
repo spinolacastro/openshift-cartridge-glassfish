@@ -1,0 +1,19 @@
+<div id="${uuid}" class="listnobullet">
+    <div id="${uuid}_content">
+        <ul id="${uuid}_list">
+        </ul>
+    </div>
+
+</div>
+<div id="${uuid}_nav" class="jmakiStackNav">
+        <a href="#" id="${uuid}_previous" class="previous">Previous</a>
+        <div id="${uuid}_mid" class="mid"></div>
+        <a href="#" id="${uuid}_next" class="next">Next</a>
+</div>
+<div id="${uuid}_template" style="display:none">
+    <div  class="littlearrows">
+        <a href="javascript:var win = window.open('@{link}','blogs','toolbar=1,location=1,scrollbars=1,status=1,menuBar=1,resizable=1,width=' + Math.min(1000, screen.width) + ',height=' + Math.min(750, screen.height)); win.focus();" onmouseover="window.status='@{title}'; return true;">@{title}</a><br>
+	@{description}
+        <br/>
+    </div>
+</div>

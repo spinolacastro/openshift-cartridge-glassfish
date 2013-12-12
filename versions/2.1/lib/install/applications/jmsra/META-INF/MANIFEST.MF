@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Specification-Title: Open Message Queue / Sun Java(tm) System Message 
+ Queue J2EE Resource Adapter for JMS
+Class-Path: imqbroker.jar 
+Created-By: 1.5.0_14 (Sun Microsystems Inc.)
+Main-Class: com.sun.messaging.jmq.Version
+Implementation-Title: Open Message Queue
+Specification-Vendor: Sun Microsystems, Inc.
+Specification-Version: 1.5
+Implementation-Version: 4.3 (Build 7-g)
+Implementation-Vendor: Sun Microsystems, Inc.
+
+Name: com/sun/messaging/jms/ra
+

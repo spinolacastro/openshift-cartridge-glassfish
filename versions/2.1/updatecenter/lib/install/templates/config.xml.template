@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+-->
+
+<!-- FIXME -->
+<!-- DOCTYPE updatecenter SYSTEM "../lib/dtds/updatecenter-config-1_0.dtd" -->
+
+<updatecenter use-proxy='false' use-system-proxies='true' hide-system-tray-icon="FALSE" accept-only-signed-jars="FALSE" keystore-password="changeit">
+
+    <catalogs>
+        <!--catalog url="http://www.netbeans.org/updates/dev_1.18_.xml" name="nb-dev"/-->
+	<catalog url="http://javaee-updates.java.sun.com/beta/update_center_1_0.xml" is-system-catalog="TRUE" name="SYSTEM">
+            <description>Update Center Server for Internal/Update Center jars.</description>
+        </catalog>
+	<catalog url="http://${glassfish.updatecenter.server}/beta/update_center_${glassfish.version}_${dtd.version}.xml" is-system-catalog="TRUE" name="glassfish">
+            <description>Update Center Server for GlassFish and related components.</description>
+            <l10n locale="CHINA">
+                <property name="glassfish.updatecenter.server" value="javaee-updates.java.sun.com.cn"/>
+            </l10n>
+            <property name="glassfish.updatecenter.server" value="javaee-updates.java.sun.com"/>
+        </catalog>
+    </catalogs>
+
+    <containers>
+        <container type="APPSERVER" name="sjsas91beta" home="%appserver_home%"/>
+    </containers>
+
+    <update-preference enable-notify="TRUE" enable-download="FALSE" enable-install="FALSE" action-day="never" 
+    action-hour="15" action-minute="0" />
+
+    <log-service file="logs/updatecenter.log">
+        <module-log-levels root="INFO" installer="INFO" gui="INFO" config="INFO" />
+    </log-service>
+
+</updatecenter>

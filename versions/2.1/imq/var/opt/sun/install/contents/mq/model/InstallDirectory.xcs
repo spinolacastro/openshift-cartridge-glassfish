@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICE OR THIS HEADER.
+
+    Copyright 2006, 2007 Sun Microsystems, Inc. All rights reserved.
+    Use is subject to license terms.
+
+    The contents of this file are subject to the terms of the Common Development
+    and Distribution License("CDDL") (the "License"). You may not use this file
+    except in compliance with the License.
+
+    You can obtain a copy of the License at https://openinstaller.dev.java.net/license.html
+    or http://openinstaller.dev.java.net/license.txt . See the License for the
+    specific language governing permissions and limitations under the License.
+
+    When distributing the Covered Code, include this CDDL Header Notice in each
+    file and include the License file at http://openinstaller.dev.java.net/license.txt .
+    If applicable, add the following below this CDDL Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyrighted [year] [name of copyright owner]"
+
+    ident "@(#)%Name% %Revision% %Date% SMI"
+
+    This file declares the backend variables and routines for the
+    generic Install Home Page used in this framework.
+-->
+<oor:component-schema oor:version="1.1" oor:name="InstallDirectory" oor:package="org.openinstaller.InstallDirectory"
+    xsi:schemaLocation="http://openoffice.org/2001/registry"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:oor="http://openoffice.org/2001/registry"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xml:lang='en-US'>
+  <component>
+    <group oor:name="directory">
+      <prop oor:name="INSTALL_DIRECTORY" oor:type="xs:string" oor:transient="true">
+        <value/>
+        <constraints>
+          <minLength oor:value="1"/>
+        </constraints>
+        <actions>
+          <onSet><![CDATA[
+            import java.io.File;
+            import org.openinstaller.provider.conf.ConfigHelper;
+
+            String theInstallHome = thisProperty.getUnconfirmedValue();
+	    File file1 = new File(theInstallHome);
+	    boolean delete_dir = false;
+	    if (!file1.exists())  {
+    	        delete_dir=true;
+	    } 
+
+	    // Bug in OI where setting INSTALL_HOME, will create this dir on setValue()
+  	    // but we don't necessarily want that so delete it
+	    // if it didn't exist before.
+	    // Also creates the directory set in
+	    // InstallHome.directory.INSTALL_HOME even before you get here.
+
+            ConfigHelper.setValue("InstallHome.directory.INSTALL_HOME", theInstallHome);
+	
+            /*
+             * Check if InstallHome exists
+             */
+            String regFilePath = Util.getServiceTagRegistryPath(theInstallHome);
+            File regFile = new File(regFilePath);
+            if (!regFile.exists())  {
+                throw new EnhancedException("MQ_NO_INSTALL_FOUND", new String[]{});
+            } 
+
+
+            ]]></onSet>
+        </actions>
+        <info>
+          <desc xml:lang="en-US">Home Directory Path.</desc>
+        </info>
+      </prop>
+    </group>
+  </component>
+</oor:component-schema>

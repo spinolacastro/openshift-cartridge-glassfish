@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+ # BEGIN_HEADER - DO NOT EDIT
+ #
+ # The contents of this file are subject to the terms
+ # of the Common Development and Distribution License
+ # (the "License").  You may not use this file except
+ # in compliance with the License.
+ #
+ # You can obtain a copy of the license at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # See the License for the specific language governing
+ # permissions and limitations under the License.
+ #
+ # When distributing Covered Code, include this CDDL
+ # HEADER in each file and include the License file at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # If applicable add the following below this CDDL HEADER,
+ # with the fields enclosed by brackets "[]" replaced with
+ # your own identifying information: Portions Copyright
+ # [year] [name of copyright owner]
+-->
+
+<!--
+ # @(#)setup-jbi.xml
+ # Copyright 2004-2007 Sun Microsystems, Inc. All Rights Reserved.
+ #
+ # END_HEADER - DO NOT EDIT
+-->
+<!--
+ Copyright 2004-2005 Sun Microsystems, Inc.  All rights reserved.
+ Use is subject to license terms.
+-->
+<!--
+# This ant script is responsible for installing JBI files in the appserver area
+# If you run this script in AS_INSTALL/jbi/lib/install use ant -f jbi/setup-jbi.xml
+# Otherwise use ant -f <thisfile> -DAS_INSTALL=<appserver_install_location>
+# 
+-->
+
+<project name="JBI_Common_Install_Tasks" default="install_jbi" basedir=".">
+
+<target name="install_jbi" depends="install" >
+</target>
+
+<target name="install" depends="init-common-install" >
+    <antcall target="create-component-install-root"/>
+    <!--In future add jar unpack-->
+</target>
+
+<target name="create-component-install-root">
+    <antcall target="copy-component-installer">
+        <param name="archive" value="${AS_INSTALL}/lib/addons/jbi/appserv-jbise.jar"/>
+        <param name="dest" value="${JBI_HOME}/components/sun-javaee-engine"/>
+    </antcall>
+</target>
+
+<target name="extract-component">
+    <mkdir dir="${dest}"/>
+    <unjar src="${archive}" dest="${dest}" overwrite="true"/>
+</target>
+
+<target name="copy-component-installer">
+    <mkdir dir="${dest}"/>
+    <copy file="${archive}" todir="${dest}" overwrite="true" verbose="true"/>
+</target>
+
+<target name="create-directory">
+    <mkdir dir="${dest}"/>
+</target>
+
+<target name="init-common-install"
+    depends="set-global,check-default-as-install,set-default-as-install,set-as-install,set-jbi-home,check-settings" >
+    <condition property="isWindows">
+      <os family="windows"/>
+    </condition>
+    <echo message="JBI_HOME is ${JBI_HOME}"/>
+    <fail message="One or more required properties are not set - ABORT." unless="env-okay"/>
+</target>
+
+<target name="check-default-as-install" unless="AS_INSTALL">
+    <available file="${basedir}/../../../lib/appserv-rt.jar" property="default-is-good"/>
+</target>
+
+<target name="set-default-as-install" unless="AS_INSTALL" if="default-is-good">
+    <property name="AS_INSTALL" value="${basedir}/../../.." />
+    <property name="JBI_HOME" value="${AS_INSTALL}/jbi" />    
+</target>
+
+<target name="check-settings" >
+    <condition property="env-okay">
+        <and>
+            <isset property="AS_INSTALL"/>
+            <isset property="JBI_HOME"/>
+        </and>
+    </condition>
+</target>
+
+<target name="set-global" >
+    <property environment="env"/>
+</target>
+
+<target name="set-as-install" unless="AS_INSTALL" if="env.AS_INSTALL" >
+    <property name="AS_INSTALL" value="${env.AS_INSTALL}" />
+</target>  
+
+<target name="set-jbi-home">
+    <property name="JBI_HOME" value="${AS_INSTALL}/jbi" />
+</target>  
+
+
+</project>

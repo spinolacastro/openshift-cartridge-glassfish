@@ -1,0 +1,15 @@
+default namespace this = "http://java.sun.com/xml/ns/jbi/component-info-list"
+start = element component-info-list 
+{
+    # version = "1.0" in this revision
+    attribute version { xsd:decimal },
+    component-info*
+}
+component-info = element component-info 
+{
+    attribute type { "service-engine" | "binding-component" | "shared-library" },
+    attribute name { text },
+    attribute state { "Shutdown" | "Started" | "Stopped" | "Unknown" },
+    element description { text },
+    element* -this:* { text }*
+}

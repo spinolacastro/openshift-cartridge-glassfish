@@ -1,0 +1,56 @@
+<!--
+ Copyright 2004-2005 Sun Microsystems, Inc.  All rights reserved.
+ Use is subject to license terms.
+-->
+
+<!DOCTYPE project [
+  <!ENTITY sampleCommonCommands SYSTEM "../common-ant.xml">
+]>
+
+<project name="hello-example" default="core" basedir=".">
+  
+  <!-- Configure the context path for this application --> 
+  <property name="hellowar.home" value="."/> 
+ 
+  <property name="hellowar.web.name" value="hello"/>
+
+  <!-- Property names to passed to common targets -->  
+  <property name="binary.name" value="${hellowar.web.name}"/>  
+  <property name="sample.name" value="quickstart"/>
+  <property name="application.type.war" value="true"/>
+  
+  <property name="sample.home" value="../" />
+
+  &sampleCommonCommands;
+    
+  <target name="core" depends="war"
+     description="Copy HTML and JSP pages and build hello.war file" >
+  </target>  
+  
+  <target name="war" depends="init_common,create_war_common"/>
+  
+  <!-- ======================================================= -->
+  <!-- Deploy target.                                          -->
+  <!-- ======================================================= -->
+  <target name="deploy" depends="select_binary_common, setpassword, deploy_common"/>
+  
+  <!-- ======================================================= -->
+  <!-- Undeploy target.                                        -->
+  <!-- ======================================================= -->
+  <target name="undeploy" depends="init_common, setpassword, undeploy_common"/>
+  
+  <target name="clean" depends="clean_common"/>            
+
+  <!-- ======================================================= -->
+  <!-- Verify target.                                          -->
+  <!-- ======================================================= -->
+  <target name="verify" depends="select_binary_common,verify_common" />  
+
+  <!-- ======================================================= -->
+  <!-- Javadocs target.                                        -->
+  <!-- ======================================================= -->
+  <target name="javadocs" depends="javadocs_noop_common"/>   
+
+  <target name="all"      depends="core,javadocs,verify,deploy"/>
+</project>
+

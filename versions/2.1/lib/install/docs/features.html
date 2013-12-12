@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+<!--Arbortext, Inc., 1988-2007, v.4002-->
+  <style type="text/css">  body{margin-top:0}   body,td,p,div,span,a,ul,ul li, ol, ol li, ol li b, dl,h1,h2,h3,h4,h5,h6,li {     font-family:geneva,helvetica,arial,"lucida sans",sans-serif;     font-size:10pt   }   h1 {font-size:18pt}   h2 {font-size:14pt}   h3 {font-size:12pt}   code,kbd,tt,pre {     font-family:monaco,courier,"courier new";     font-size:10pt;   }   li {padding-bottom: 8px; margin-left:18px}   p.copy, p.copy a {     font-family:geneva,helvetica,arial,"lucida sans",sans-serif;     font-size:8pt     }   p.copy {text-align: center}      table.grey1,tr.grey1,td.grey1{background:#f1f1f1}   th {     color:#ffffff;     font-family:geneva,helvetica,arial,"lucida sans",sans-serif;     font-size:12pt   }   td.insidehead {     font-weight:bold;     background:white;     text-align: left;   }   a {text-decoration:none; color:#3E6B8A}   a:visited{color:#917E9C}   a:hover {text-decoration:underline}      p.feature, li.feature  {margin-left: 0.3in}   
+  </style>
+  <title>Sun GlassFish Enterprise Server - Features and Resources</title>
+</head>
+<body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"
+ alink="#333366" link="#594fbf" vlink="#1005fb">
+<table border="0" cellpadding="2" cellspacing="4" width="100%">
+  <tbody>
+    <tr>
+      <td align="right" valign="top"> <a href="http://www.sun.com"><img
+ src="graphics/logo_sun.gif" border="0"></a> </td>
+    </tr>
+    <tr>
+      <td align="left" bgcolor="#587993" valign="top"> <font
+ color="#ffffff"><b>Sun GlassFish Enterprise Server 2.1</b></font> </td>
+    </tr>
+  </tbody>
+</table>
+<h1>Features and Resources </h1>
+<p class="feature">Sun GlassFish Enterprise Server 2.1 provides a Java
+EE compatible server for the development and deployment
+of Java EE applications and Java Web Services. Key features include
+scalable transaction management, container-managed
+persistence runtime, performant web services, clustering, high
+availability, security, and integration capabilities. </p>
+<p class="feature">This page contains the following topics:</p>
+<ul>
+  <li><a href="#keyfeatures">Key Features</a> </li>
+  <li><a href="#resources">Resources</a></li>
+</ul>
+<a name="keyfeatures"></a>
+<h2>Key Features</h2>
+<p class="feature"><b>Java EE 5 platform support</b>: Sun GlassFish
+Enterprise Server 2.1 complies fully with the latest Java EE 5
+specification to deliver one of the best application runtimes for
+next-generation enterprise applications
+and web services. Sun GlassFish Enterprise Server 2.1&nbsp; implements
+and extends the
+following Java EE standards:</p>
+<ul>
+  <li>Enterprise Java Beans 3.0</li>
+  <li>JAXB 2.0</li>
+  <li>Java Persistence</li>
+  <li>Java Server Faces 1.2</li>
+  <li>Java Server Pages 2.1 (JSP 2.1)</li>
+  <li>Java Server Pages Standard Tag Library (JSTL) 1.2</li>
+  <li>Streaming API for XML (StAX)</li>
+  <li>Web Services Metadata</li>
+  <li>Java API for XML based Web Services 2.0 (JAX-WS 2.0)</li>
+  <li>Common Annotations for the Java Platform 1.0 (CAJ 1.0)</li>
+  <li>And more...for a complete list of the Java EE technologies
+included, see the Release Notes.</li>
+</ul>
+<p class="feature"><b>Web Services Interoperability Technologies (WSIT)
+Support</b> <br>
+Sun is working closely with Microsoft to ensure interoperability of Web
+services enterprise technologies such as message optimization, reliable
+messaging, and security. The initial release of WSIT
+is a product of this joint effort. WSIT is an implementation of a
+number of open web services specifications to support enterprise
+features. In addition to message optimization, reliable messaging, and
+security, WSIT includes a bootstrapping and configuration technology.
+Starting with the
+core XML support currently built into the Java platform, WSIT uses or
+extends existing features and adds new support for interoperable web
+services, including:</p>
+<ul>
+  <li>Bootstrapping and Configuration</li>
+  <li>Message Optimization Technology</li>
+  <li>Reliable Messaging Technology</li>
+  <li>Security Technology</li>
+</ul>
+<p class="feature"><b>Java Business Integration (JBI) Support</b><br>
+JBI extends Java EE with business integration Service Provider
+Interfaces (SPI). These SPI enable developers to create or implement a
+Java business integration environment for specifications such as WSCI,
+BPEL4WS and
+the W3C Choreography Working Group. A JBI implementation is installed
+directly by the installer, mostly in the <code>install_dir/jbi</code>
+directory. This directory contains all common JAR files and system
+components for the JBI including a <code>lifecycle</code> module that
+starts the JBI framework in the JVM.</p>
+<p class="feature"><b>In-Memory Replication Support</b><br>
+In-memory replication on other servers provides lightweight storage of
+session state data without the need to obtain a separate database, such
+as HADB. This type of replication uses memory on other servers for high
+availability storage of HTTP session and stateful session bean data.
+Clustered server instances replicate session state in a ring of
+topology. Each backup instance stores the replicated data in memory.
+Replication of session state data in memory on other
+servers enables sessions to be distributed. The use of in-memory
+replication requires the Group Management Service (GMS) to be enabled.</p>
+<p class="feature"><b>Usage Profiles Support</b><br>
+Every administrative domain is associated with a usage profile which
+identifies the capabilities of
+that domain. Sun GlassFish Enterprise Server 2.1 provides the following
+profiles:</p>
+<ul>
+  <li><i>Developer</i> : Use this profile if you are running your
+domain in a development environment and if your applications do not
+need the NSS keystore or clustering features.</li>
+  <li><i>Cluster</i>:&nbsp; Use this profile if you need to create
+clusters but do not require the high-availability database (HADB) or
+the NSS keystore.</li>
+  <li><i>Enterprise:</i> Use this profile if you need HADB and NSS.
+This profile is not usable unless you install the Enterprise Server
+with HADB and NSS.</li>
+</ul>
+<p class="feature"><b>Open Source and GlassFish Community</b><br>
+In June 2005, Sun launched the <a
+ href="http://java.sun.com/javaee/glassfish/">GlassFish</a> community
+with the goal of developing a free, open source, commercial-grade
+application server that implements the newest
+features of the Java EE 5 platform and related enterprise technologies.
+Sun GlassFish Enterprise Server 2.1 is based on the source code
+developed by Sun
+engineers and the GlassFish community.</p>
+<h2><a name="resources"></a>Resources</h2>
+<p class="resources"><b>Feedback Submittal Form:</b> Use the <a
+ href="http://java.sun.com/docs/forms/javaeesubmittalform.html">Java EE
+SDK Feedback Submittal Form</a> to submit feedback on this product.</p>
+<p class="resources"><b>Glassfish Community:</b> Sun GlassFish
+Enterprise Server is
+developed through the <a href="https://glassfish.dev.java.net">Glassfish</a>
+open
+source project and community. The GlassFish community is building a
+free, open source application server which implements the newest
+features in the Java EE 5 platform.</p>
+<p class="resources"><b>Java Enteprise Community:</b> Part of <a
+ href="http://java.net/">java.net</a>, the <a
+ href="http://community.java.net/java-enterprise/">Java Enteprise
+Community</a> is centered around Java EE applications, components, and
+tools. </p>
+<p class="resources"><b>Sun Technology Forums:</b> The <a
+ href="http://forums.java.net/jive/forum.jspa?forumID=56&amp;start=0">GlassFish
+Forum</a> is an
+interactive forum where you can find help and discuss GlassFish-related
+topics.</p>
+<p class="resources"><b>Sun
+Software Support Service:</b> <a
+ href="http://www.sun.com/service/support/software/standard.html"> Sun
+Software Support Service Standard</a> contracts are available for
+purchase. </p>
+<p class="resources"><b>Sun Developer Network: </b>For further help
+and to keep on top of the latest developments,
+join the <a
+ href="http://developers.sun.com/user_registration/whyregister.html">Sun
+Developer Network</a>. </p>
+<p class="resources"><b>BigAdmin System Administrator Resources and
+Community:</b> Join this <a
+ href="http://www.sun.com/bigadmin/home/index.html">System
+Administration Portal</a> to
+learn more about the Sun GlassFish Enterprise Server. </p>
+<p class="resources"><b>Release Notes and Product Documentation:</b>
+The <cite>Release Notes</cite>, <cite>Installation
+Guide</cite>, and other product documentation are available in the Sun
+GlassFish Enterprise Server 2.1 collection on docs.sun.com<sup>SM</sup>.</p>
+<p class="resources">Data sheets, press information, news, and other
+information
+are available at the <a href="http://www.sun.com/appserver">Sun
+GlassFish Enterprise Server home page</a>. </p>
+<hr style="width: 80%; height: 2px;">
+<p class="copy"><a href="http://wwws.sun.com/company/">Company Info</a>
+&nbsp;&nbsp;|&nbsp;&nbsp; <a href="http://wwws.sun.com/contact/">Contact</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+Copyright 2008 Sun Microsystems</p>
+</body>
+</html>

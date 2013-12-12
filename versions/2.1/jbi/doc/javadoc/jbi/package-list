@@ -1,0 +1,5 @@
+javax.jbi
+javax.jbi.component
+javax.jbi.management
+javax.jbi.messaging
+javax.jbi.servicedesc

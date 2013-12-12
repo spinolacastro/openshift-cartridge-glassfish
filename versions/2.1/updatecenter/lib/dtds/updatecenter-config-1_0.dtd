@@ -1,0 +1,335 @@
+<!-- -//Glassfish//DTD Update Center Config 1.0//EN -->
+<!-- XML representation of Update Center Config -->
+<!--
+
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+
+ Contributor(s):
+
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+
+-->
+
+<!-- boolean
+
+  Used in:
+    update-preference
+-->
+<!ENTITY % boolean "(YES | NO | ON | OFF | 1 | 0 | TRUE | FALSE)">
+
+<!-- log-level
+    Configure the Log Levels for Various Loggers in Update Center
+    Modules. The Default level is set to INFO, The log levels can be
+    changed using one of the seven levels. Please refer JSR 047 to
+    understand the Log Levels.
+
+    The Logs can be completely turned off by using 'OFF' value. The names of
+    the module loggers are self-explanatory
+
+  Used in:
+     module-log-levels
+-->
+<!ENTITY % log-level "(FINEST | FINER | FINE | CONFIG | INFO | WARNING | SEVERE | OFF)">
+
+<!-- module-log-levels
+  Log levels for different modules in the Update Center.
+
+    installer
+        Default INFO. log level for Installer module
+    gui
+        Default INFO. log level for GUI module
+    config
+        Default INFO. log level for config module
+    root
+        Default INFO. If this is OFF, all other values are ignored.
+
+  Used in:
+    updatecenter-config
+-->
+<!ELEMENT module-log-levels (property*)>
+
+<!ATTLIST module-log-levels
+    root %log-level; "INFO"
+    installer %log-level; "INFO"
+    gui %log-level; "INFO"
+    config %log-level; "INFO">
+
+
+<!-- day
+
+  Used in:
+    update-preference
+-->
+<!ENTITY % day "(SUN | MON | TUE | WED | THU | FRI | SAT | EVERYDAY | NEVER)">
+
+<!-- updatecenter
+    The updatecenter element describes all the config for the update
+    center.
+
+  attributes
+    use-proxy
+        Default false. If true, use the proxy server settings specified by proxy
+        element. If false, proxy element is ignored.
+    use-system-proxies
+        Default false. If true, use system proxy settings if and only if use-proxy
+        is false.
+    hide-system-tray-icon
+        Default false. If true, Update Center system tray icon will not be shown.
+    accept-only-signed-jars
+        Flag to indicate whether to accept only signed jars.
+        If true only signed jars are accepted by update center client. If false
+        all the jars are accepted whether signed or not.
+     keystore-password
+        Indicates the encoded keystore password to use. Update center client uses
+        JDK keystore to verify the signed jars.
+     thread-pool-size
+        Indicates number of threads to use to download modules in parallel.
+     thread-pool-size-maximum
+        Indicates maximum number of threads that can be used to download modules
+        in parallel.
+-->
+<!ELEMENT updatecenter (catalogs, containers, update-preference, log-service,
+       proxy?, property*)>
+<!ATTLIST updatecenter use-proxy %boolean; "FALSE"
+     use-system-proxies %boolean; "FALSE"
+     hide-system-tray-icon %boolean; "FALSE"
+     accept-only-signed-jars %boolean; "FALSE"
+     keystore-password CDATA #REQUIRED
+     thread-pool-size CDATA "2"
+     thread-pool-size-maximum CDATA "4">
+
+<!-- proxy
+    The proxy element describes the proxy host name and port.
+
+  attributes
+    proxy-host
+        Host name of the proxy server.
+    proxy-port
+        Port number of the proxy server.
+    use-same-proxy-for-ssl
+        Flag that indicates proxy-host, proxy-port can be also be used for SSL.
+        If "true", sll-porxy-host and ssl-proxy-port values are ignored and 
+        proxy-host and proxy-port are used for SSL communication.
+    ssl-proxy-host  
+        Host name of the proxy server for SSL.
+    ssl-proxy-port 
+        Port number of the proxy server for SSL.
+    authentication-required
+        This described if the proxy requires authentication or not.
+    proxy-user   
+        User name for the proxy server.
+    proxy-password   
+        Password for the proxy server.
+
+  Used in:
+    updatecenter-config
+-->
+<!ELEMENT proxy (property*)>
+<!ATTLIST proxy       proxy-host CDATA #REQUIRED
+		      proxy-port CDATA #REQUIRED
+		      use-same-proxy-for-ssl %boolean; "FALSE"
+                      ssl-proxy-host CDATA #REQUIRED
+                      ssl-proxy-port CDATA #REQUIRED
+		      authentication-required %boolean; "FALSE"
+                      proxy-user CDATA #REQUIRED
+                      proxy-password CDATA #REQUIRED>
+
+<!-- containers
+    The containers element consists of all the containers that the update center
+    supports. Examples of containers would be GlassFish or NetBeans.
+
+  Used in:
+    updatecenter-config
+-->
+<!ELEMENT containers (container+)>
+
+<!-- container
+    The container element describes the container supported by Update Center.
+    For example type, description and home (installed location) of the 
+    container. 
+
+  attributes
+    type
+        type of the container.   
+    name
+        name of the container.   
+    description 
+        Descrition of the container.
+    home 
+        Installed home location of the container. 
+
+  Used in:
+    containers
+-->
+<!ELEMENT container (description?, property*)>
+<!ATTLIST container type CDATA #REQUIRED
+                  name CDATA #REQUIRED
+                  home CDATA #REQUIRED>
+
+
+<!-- catalogs
+    The catalogs element consists of all the catalogs that need be checked for
+    updates/modules.   
+
+  Used in:
+    updatecenter-config
+-->
+<!ELEMENT catalogs (catalog+)>
+
+<!-- catalog
+    The catalog element describes the catalog of a Update Center server. This
+    contains information about name, description, locale specific urls of the 
+    catalog if any and URL of the catalog. 
+
+  attributes
+    name
+        name of the catalog.   
+    description 
+        Descrition of the catalog.
+    l10n
+        Used to specify locale specific urls for the catalog. Locale specific
+        token values are provided using property sub-element. 
+   
+    url 
+        URL of the catalog. URL can be tokenized. For tokenized URL, token
+        values are provided using sub-element property or l10n.
+    is-system-catalog 
+        Indicates whether the catalog is a system catalog.
+        User is not allowed to delete system catalogs.       
+ 
+
+  Used in:
+    catalogs
+-->
+<!ELEMENT catalog (description?, l10n*, property*)>
+<!ATTLIST catalog name CDATA #REQUIRED
+                  url CDATA #REQUIRED
+                  is-system-catalog %boolean; "TRUE">
+
+<!-- l10n
+   Used to specify locale specific urls for the catalog. Locale specific
+   token values are provided using sub-element property . Locale specific
+   token values take precedence over default token values. Default token
+   values are specified as properties of catalog element.
+-->
+<!ELEMENT l10n (property+)>
+<!ATTLIST l10n locale CDATA #REQUIRED>
+
+<!-- update-preference
+    The update-preference element describes how often the client should check
+    for new updates and softwares in the update center. It also describes
+    how to handle the updates.
+
+  attributes
+    enable-notify
+        Flag that determines whether to notify user about new updates
+        and software available.
+    enable-download
+        Flag to indicate whether to automatically download new updates.
+    enable-install
+        Flag to indicate whether to automatically install new updateds. 
+    action-day
+        The day at which the update check should happen. It can any
+        of the following- SUN, MON, TUE, WED, THU, FRI or SAT.
+    action-hour
+        The hour at which the update check should happen. It can be a
+        number between 1-24.
+    action-minutue
+        The minute t which the update check should happen. It can a
+        number between 1-59.
+
+  Used in:
+    updatecenter-config
+-->
+<!ELEMENT update-preference (property*)>
+<!ATTLIST update-preference enable-notify      %boolean; "TRUE" 
+		 enable-download        %boolean; "TRUE"
+		 enable-install                %boolean; "TRUE" 
+                 action-day     	%day; "TUE"
+                 action-hour        	CDATA "15"
+                 action-minute          CDATA "0">
+
+
+<!-- log-service
+    By default, logs would be kept in $UPDATECENTER-HOME/logs.
+    Update center logs messages to undatecenter.log.
+
+    file
+        Can be used to rename or relocate updatecenter.log using absolute
+        path.
+
+    log-rotation-limit-in-bytes
+        Log Files will be rotated when the file size reaches the
+        limit.
+    log-rotation-timelimit-in-minutes
+        This is a new attribute to enable time based log rotation.
+        The Log File will be rotated only if this value is non-zero
+        and the valid range is 60 minutes (1 hour) to 10*24*60
+        minutes (10 days). If the value is zero then the files will
+        be rotated based on size specified in
+        log-rotation-limit-in-bytes.
+    log-to-console
+        Logs will be sent to stderr
+
+  Used in:
+     updatecenter
+-->
+<!ELEMENT log-service (module-log-levels?, property*)>
+
+<!ATTLIST log-service
+    file CDATA #IMPLIED
+    log-handler CDATA #IMPLIED
+    log-filter CDATA #IMPLIED
+    log-to-console %boolean; "FALSE"
+    log-rotation-limit-in-bytes CDATA "500000"
+    log-rotation-limit-in-minutes CDATA "0">
+
+<!-- description
+    The description element describes a catalog's characteristics. 
+    For example, "GlassFish Catalog", "NetBeans Catalog", etc.
+
+  Used in:
+    catalog
+-->
+<!ELEMENT description (#PCDATA)>
+
+<!-- property
+    Syntax for supplying properties as name value pairs
+
+  Used in:
+    Many ELEMENTs in this DTD.
+-->
+<!ELEMENT property (description?)>
+
+<!ATTLIST property
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED>
+

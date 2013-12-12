@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ # BEGIN_HEADER - DO NOT EDIT
+ #
+ # The contents of this file are subject to the terms
+ # of the Common Development and Distribution License
+ # (the "License").  You may not use this file except
+ # in compliance with the License.
+ #
+ # You can obtain a copy of the license at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # See the License for the specific language governing
+ # permissions and limitations under the License.
+ #
+ # When distributing Covered Code, include this CDDL
+ # HEADER in each file and include the License file at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # If applicable add the following below this CDDL HEADER,
+ # with the fields enclosed by brackets "[]" replaced with
+ # your own identifying information: Portions Copyright
+ # [year] [name of copyright owner]
+-->
+
+<!--
+ # @(#)jbi_admin.xml
+ # Copyright 2004-2007 Sun Microsystems, Inc. All Rights Reserved.
+ #
+ # END_HEADER - DO NOT EDIT
+-->
+<!--
+ Copyright (c) 2004-2007 Sun Microsystems Inc., All Rights Reserved.
+-->
+<!--
+@author chikkala
+-->
+<project basedir="." default="help" name="jbi_admin" xmlns:jbi="http://www.sun.com/ns/jbi/jbi-ant/1">
+    <description>
+        This ant script contains the jbi ant tasks and the targets and properties using 
+        which the jbi admin commands can be performed.
+    </description>
+
+    <target name="-pre-jbi-admin-setup">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the parent build script where this
+        build script is imported. -->
+    </target>
+
+    <target name="-jbi-admin-setup" depends="-pre-jbi-admin-setup" >
+        
+        <taskdef resource="com/sun/jbi/ui/ant/antlib.xml" />
+        <!-- echo i18n task definition for echo messages from i18n bundle -->
+        <taskdef name="i18n-echo" classname="com.sun.jbi.ui.ant.util.I18NEchoTask"/>
+    
+        <!-- properties used as attribute values for ant tasks -->
+        <!-- 
+        default target. command line args may override this value. 
+        valid values are 'server', 'domain', <cluster_name> or <instance_name>
+        -->
+        <property name="jbi.target" value="server" />
+        
+        <!-- 
+        default security . command line args may override this value. 
+        valid values are "true" or "false". "true" for using SSL/TLS to 
+        connect to the admin server
+        -->
+        <property name="jbi.secure" value="false" />
+        <!-- default username. command line args may override this value. -->
+        <property name="jbi.username" value="admin" />
+        <!-- default password. command line args may override this value. -->
+        <property name="jbi.password" value="adminadmin" />
+        <!-- default host. command line args may override this value. -->
+        <property name="jbi.host" value="localhost" />    
+        <!-- default port. command line args may override this value. -->
+        <property name="jbi.port" value="4848" />
+        <!-- default descriptor. command line args may override this value. -->
+        <property name="jbi.show.descriptor" value="false" />
+    
+        <!-- default value for throwing build exception on task failure. 
+        command line args may override this value-->
+        <property name="jbi.task.fail.on.error" value="true" />
+    
+        <!-- default value for forcing the task to complete the work even under error condition.
+        this option is being used in the shut-down-component, shut-down-service-assembly
+        uninstall-shared-library, uninstall-component, undeploy-service-assembly to force the task
+        to complete the operation.
+        command line args may override this value-->
+        <property name="jbi.force.task" value="false" />
+        <!-- 
+        default keepArchive attribute value for uninstall/undeploy tasks.
+        -->        
+        <property name="jbi.keep.archive" value="false" />
+        
+        <!--
+        installer file attribute value. set using command line args.
+        <property name="jbi.install.file" value="mydir/my_comp/installer.zip" />
+        
+        for name/value installation configuration parameters in a file.
+        set using command line args.
+        <property name="jbi.install.params.file" value="mydir/my_comp/params.properties" />
+        
+        deployment file attribute value. set using command line args.
+        <property name="jbi.deploy.file" value="mydir/my_comp/serviec-assembly.zip" />
+        
+        this property should exist to display the list task output in xml text.
+        Note that the value of the property is not important. 
+        If the property exists, the list tasks displays the output in xml text. 
+        If not exists, the list tasks display the results in a formatted plain text.
+        This property may be set using command line args. 
+        <property name="jbi.list.xml.output" value="xml" />
+        
+        When user sets this ("jbi.list.xml.output" ) property, the list task output
+        will be saved as xml text into the property "jbi.list.output" for display.
+        Note that the "jbi.list.output" should not be set as ant user property (with -D option)      
+        -->        
+    </target>
+    
+    <target name="-init-macrodef-echo-info" >
+        
+        <macrodef name="echo-info-cmd" uri="http://www.sun.com/ns/jbi/jbi-ant/1">
+            <attribute name="i18nkey" />
+            <sequential>
+                <i18n-echo key = "@{i18nkey}" />
+                <i18n-echo key = "echo.i18n.key.connection.info" >
+                    <arg value="${jbi.host}" />
+                    <arg value="${jbi.port}" />
+                    <arg value="${jbi.secure}" />
+                    <arg value="${jbi.username}" />
+                    <arg value="${jbi.target}" />
+                </i18n-echo>
+            </sequential>
+        </macrodef>
+
+        <macrodef name="echo-info-no-target-cmd" uri="http://www.sun.com/ns/jbi/jbi-ant/1">
+            <attribute name="i18nkey" />
+            <sequential>
+                <i18n-echo key = "@{i18nkey}" />
+                <i18n-echo key = "echo.i18n.key.connection.info.no.target" >
+                    <arg value="${jbi.host}" />
+                    <arg value="${jbi.port}" />
+                    <arg value="${jbi.secure}" />
+                    <arg value="${jbi.username}" />
+                </i18n-echo>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="echo-info-file" uri="http://www.sun.com/ns/jbi/jbi-ant/1">
+            <attribute name="file" />
+            <sequential>
+                <i18n-echo key="echo.i18n.key.file" >
+                    <arg value="@{file}" />
+                </i18n-echo>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="echo-info-name" uri="http://www.sun.com/ns/jbi/jbi-ant/1">
+            <attribute name="name" />
+            <sequential>
+                <i18n-echo key="echo.i18n.key.name" >
+                    <arg value="@{name}" />
+                </i18n-echo>
+            </sequential>
+        </macrodef>
+                
+    </target>
+    
+    <target name="init-jbi-admin" depends="-jbi-admin-setup, -init-macrodef-echo-info" />
+
+    <target name="init-config-comp-runtime">
+        <property name="jbi.config.param.name" value="" />
+        <property name="jbi.config.param.value" value="" />
+        <property name="jbi.config.params.file" value="" />
+    </target>
+
+    <target name="init-config-loggers">
+        <property name="jbi.logger.name" value="" />
+        <property name="jbi.logger.level" value="INFO" />
+    </target>
+
+    <target name="init-config-app-config">
+        <property name="jbi.app.config.name" value="" />
+        <property name="jbi.app.config.params.file" value="" />
+    </target>
+
+    <target name="init-config-app-variables">
+        <property name="jbi.app.variable.name" value="" />
+        <property name="jbi.app.variable.value" value="" />
+        <property name="jbi.app.variable.type" value="" />
+        <property name="jbi.app.variables.file" value="" />
+    </target>
+
+    <!--  install shared library targets  -->
+    
+    <target name="-init-install-slib" >
+        
+        <condition property="install.slib">
+            <and>
+                <isset property="jbi.install.file"/>
+                <not>
+                    <isset property="jbi.shared.library.name"/>
+                </not>
+            </and>
+        </condition>       
+                
+        <condition property="install.slib.from.domain">
+            <and>
+                <isset property="jbi.shared.library.name"/>                
+                <not>
+                    <isset property="jbi.install.file"/>    
+                </not>
+            </and>            
+        </condition>
+        
+        <condition property="install.slib.option.error1">
+            <and>
+                <isset property="jbi.shared.library.name"/>
+                <isset property="jbi.install.file"/>                
+            </and>            
+        </condition>                 
+       
+        <condition property="install.slib.option.error2">
+            <and>
+                <not>
+                    <isset property="jbi.shared.library.name"/>
+                </not>
+                <not>
+                    <isset property="jbi.install.file"/>                
+                </not>
+            </and>            
+        </condition>                        
+        
+    </target>
+    
+    <target name="-do-install-slib" depends="init-jbi-admin, -init-install-slib" if="install.slib" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.slib" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi-install-shared-library 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        file="${jbi.install.file}"
+        />
+    </target>
+        
+    <target name="-do-install-slib-from-domain" depends="init-jbi-admin, -init-install-slib" if="install.slib.from.domain" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.slib" />
+        <jbi:echo-info-name name="${jbi.shared.library.name}" />
+        <jbi-install-shared-library 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.shared.library.name}"
+        />
+    </target>
+        
+    <target name="-do-install-slib-option-error1" depends="init-jbi-admin, -init-install-slib" if="install.slib.option.error1" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.slib" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi:echo-info-name name="${jbi.shared.library.name}" />
+        <jbi-install-shared-library 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        file="${jbi.install.file}"
+        name="${jbi.shared.library.name}"
+        />
+    </target>
+    
+    <target name="-do-install-slib-option-error2" depends="init-jbi-admin, -init-install-slib" if="install.slib.option.error2" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.slib" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi:echo-info-name name="${jbi.shared.library.name}" />
+        <jbi-install-shared-library 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        />
+    </target>
+    
+            
+    <!-- main install target for installing a shared library -->
+    <target  name="install-shared-library" 
+        depends="init-jbi-admin, -init-install-slib,
+        -do-install-slib, -do-install-slib-from-domain, 
+        -do-install-slib-option-error1, -do-install-slib-option-error2" 
+        description="Installs shared library">
+    </target>
+     
+    <!-- uninstall target for uninstalling a shared library -->
+    <target name="-init-uninstall-slib" depends="init-jbi-admin" >
+        <!-- default component name value. null or empty for no name-->
+        <property name="jbi.shared.library.name" value="" />        
+    </target>
+    
+    <target  name="uninstall-shared-library" depends="init-jbi-admin, -init-uninstall-slib"
+        description="Uninstalls shared library">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.uninstall.slib" />
+        <jbi:echo-info-name name="${jbi.shared.library.name}" />
+        <jbi-uninstall-shared-library
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        keepArchive="${jbi.keep.archive}" 
+        name="${jbi.shared.library.name}" 
+        />
+    </target>
+   
+    <target name="-init-install-comp" >
+        
+        <condition property="install.comp">
+            <and>
+                <isset property="jbi.install.file"/>
+                <not>
+                    <isset property="jbi.component.name"/>
+                </not>
+                <not>
+                    <isset property="jbi.install.params.file"/>
+                </not>
+            </and>
+        </condition>       
+        
+        <condition property="install.comp.with.params">
+            <and>
+                <isset property="jbi.install.file"/>
+                <isset property="jbi.install.params.file"/>                
+                <not>
+                    <isset property="jbi.component.name"/>
+                </not>
+            </and>            
+        </condition>       
+        
+        <condition property="install.comp.from.domain">
+            <and>
+                <isset property="jbi.component.name"/>                
+                <not>
+                    <isset property="jbi.install.file"/>    
+                </not>
+                <not>
+                    <isset property="jbi.install.params.file"/>
+                </not>
+            </and>            
+        </condition>
+        
+        <condition property="install.comp.from.domain.with.params">
+            <and>
+                <isset property="jbi.component.name"/>
+                <isset property="jbi.install.params.file"/>                
+                <not>
+                    <isset property="jbi.install.file"/>                    
+                </not>
+            </and>            
+        </condition>                        
+
+        <condition property="install.comp.option.error1">
+            <and>
+                <isset property="jbi.component.name"/>
+                <isset property="jbi.install.file"/>                
+            </and>            
+        </condition>                        
+        
+        <condition property="install.comp.option.error2">
+            <and>
+                <not>
+                    <isset property="jbi.component.name"/>
+                </not>                    
+                <not>    
+                    <isset property="jbi.install.file"/>                
+                </not>
+            </and>                        
+        </condition>                        
+        
+        
+    </target>
+    
+    <target name="-do-install-comp" depends="init-jbi-admin, -init-install-comp" if="install.comp" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        file="${jbi.install.file}" 
+        />
+    </target>
+    
+    <target name="-do-install-comp-with-params" depends="init-jbi-admin, -init-install-comp" if="install.comp.with.params" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        file="${jbi.install.file}" 
+        failOnError="${jbi.task.fail.on.error}"
+        params="${jbi.install.params.file}"
+        />
+    </target>
+    
+    <target name="-do-install-comp-from-domain" depends="init-jbi-admin, -init-install-comp" if="install.comp.from.domain" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        name="${jbi.component.name}" 
+        failOnError="${jbi.task.fail.on.error}"
+        />                
+    </target>
+    
+    <target name="-do-install-comp-from-domain-with-params" depends="init-jbi-admin, -init-install-comp" if="install.comp.from.domain.with.params" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        name="${jbi.component.name}" 
+        failOnError="${jbi.task.fail.on.error}"
+        params="${jbi.install.params.file}"
+        />        
+    </target>
+    
+    <target name="-do-install-comp-option-error1" depends="init-jbi-admin, -init-install-comp" if="install.comp.option.error1" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        file="${jbi.install.file}" 
+        name="${jbi.component.name}" 
+        failOnError="${jbi.task.fail.on.error}"
+        />                        
+    </target>
+    
+    <target name="-do-install-comp-option-error2" depends="init-jbi-admin, -init-install-comp" if="install.comp.option.error2" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.install.component" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-install-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}" 
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        />                        
+    </target>
+    
+            
+    <!-- main install target for installing a component -->
+    <target  name="install-component" 
+        depends="init-jbi-admin, -init-install-comp,
+        -do-install-comp, -do-install-comp-with-params, 
+        -do-install-comp-from-domain, -do-install-comp-from-domain-with-params, 
+        -do-install-comp-option-error1, -do-install-comp-option-error2" 
+        description="Installs service engine or binding component">
+    </target>
+    
+    <!-- uninstall target for uninstalling a component -->
+    <target name="-init-uninstall-comp" depends="init-jbi-admin" >
+        <!-- default component name value. null or empty for no name-->
+        <property name="jbi.component.name" value="" />        
+    </target>
+    
+    <target  name="uninstall-component" depends="init-jbi-admin, -init-uninstall-comp"
+        description="Uninstalls service engine or binding component">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.uninstall.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-uninstall-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        force="${jbi.force.task}"
+        keepArchive="${jbi.keep.archive}" 
+        name="${jbi.component.name}" 
+        />
+    </target>
+    
+    <!-- uninstall target for uninstalling a component -->
+    <target name="-init-upgrade-comp" depends="init-jbi-admin" >
+        <!-- default component name value. null or empty for no name-->
+        <property name="jbi.component.name" value="" />
+        <property name="jbi.install.file" value="" />
+    </target>
+    
+    <target  name="upgrade-component" depends="init-jbi-admin, -init-upgrade-comp"
+        description="Updates service engine or binding component">
+        <jbi:echo-info-no-target-cmd i18nkey="echo.i18n.key.upgrade.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi:echo-info-file file="${jbi.install.file}" />
+        <jbi-upgrade-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}"  
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.component.name}" 
+        file="${jbi.install.file}" 
+        />
+    </target>
+    
+        
+    <target name="-init-comp-lifecycle-options" depends="init-jbi-admin" >
+        <!-- default service assembly name value. null or empty for no service assembly dependency in query tasks-->
+        <property name="jbi.component.name" value="" />        
+    </target>
+    
+    <!-- start component target -->
+    <target  name="start-component" depends="init-jbi-admin, -init-comp-lifecycle-options" description="Starts service engine or binding component">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.start.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-start-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.component.name}" 
+        />
+    </target>
+    
+    <!-- stop component target -->
+    <target  name="stop-component" depends="init-jbi-admin, -init-comp-lifecycle-options" description="Stops service engine or binding component">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.stop.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-stop-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.component.name}" 
+        />
+    </target>
+
+    <!-- shutdown component target -->
+    <target  name="shut-down-component" depends="init-jbi-admin, -init-comp-lifecycle-options" description="shuts down service engine or binding component">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.shutdown.component" />
+        <jbi:echo-info-name name="${jbi.component.name}" />
+        <jbi-shut-down-component 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}" 
+        force="${jbi.force.task}" 
+        name="${jbi.component.name}" 
+        />
+    </target>
+        
+    <!-- deployment targets -->        
+    <!-- deploy service assembly targets -->
+    
+    <target name="-init-deploy-sa" >
+        
+        <condition property="deploy.sa">
+            <and>
+                <isset property="jbi.deploy.file"/>
+                <not>
+                    <isset property="jbi.service.assembly.name"/>
+                </not>
+            </and>
+        </condition>       
+                
+        <condition property="deploy.sa.from.domain">
+            <and>
+                <isset property="jbi.service.assembly.name"/>                
+                <not>
+                    <isset property="jbi.deploy.file"/>    
+                </not>
+            </and>            
+        </condition>
+        
+        <condition property="deploy.sa.option.error1">
+            <and>
+                <isset property="jbi.service.assembly.name"/>
+                <isset property="jbi.deploy.file"/>                
+            </and>            
+        </condition>                        
+
+        <condition property="deploy.sa.option.error2">
+            <and>
+                <not>
+                    <isset property="jbi.service.assembly.name"/>
+                </not>
+                <not>
+                    <isset property="jbi.deploy.file"/>                
+                </not>
+            </and>            
+        </condition>                        
+        
+    </target>
+    
+    <target name="-do-deploy-sa" depends="init-jbi-admin, -init-deploy-sa" if="deploy.sa" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.deploy.sa" />
+        <jbi:echo-info-file file="${jbi.deploy.file}" />
+        <jbi-deploy-service-assembly 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        file="${jbi.deploy.file}" 
+        />
+    </target>
+        
+    <target name="-do-deploy-sa-from-domain" depends="init-jbi-admin, -init-deploy-sa" if="deploy.sa.from.domain" >
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.deploy.sa" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-deploy-service-assembly 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.service.assembly.name}"
+        />
+    </target>
+        
+    <target name="-do-deploy-sa-option-error1" depends="init-jbi-admin, -init-deploy-sa" if="deploy.sa.option.error1" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.deploy.sa" />
+        <jbi:echo-info-file file="${jbi.deploy.file}" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-deploy-service-assembly 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        file="${jbi.deploy.file}" 
+        name="${jbi.service.assembly.name}"
+        />
+    </target>
+    
+    <target name="-do-deploy-sa-option-error2" depends="init-jbi-admin, -init-deploy-sa" if="deploy.sa.option.error2" >
+        <!-- This is a error. not allowed. the task itself will fail and emit the appropriate error  -->
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.deploy.sa" />
+        <jbi:echo-info-file file="${jbi.deploy.file}" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-deploy-service-assembly 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        />
+    </target>
+    
+            
+    <!-- main install target for deploy service assembly -->
+    <target name="deploy-service-assembly" 
+        depends="init-jbi-admin, -init-deploy-sa,
+        -do-deploy-sa, -do-deploy-sa-from-domain, 
+        -do-deploy-sa-option-error1, -do-deploy-sa-option-error2" 
+        description="Deploys Service assembly">
+    </target>
+    
+    <!-- undeploy service assembly target -->
+    <target name="-init-undeploy-sa" depends="init-jbi-admin" >
+        <!-- default service assembly name value. null or empty for no service assembly dependency in query tasks-->
+        <property name="jbi.service.assembly.name" value="" />        
+    </target>
+    
+    <target  name="undeploy-service-assembly" depends="init-jbi-admin, -init-undeploy-sa" description="Undeploys service assembly">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.undeploy.sa" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-undeploy-service-assembly 
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        force="${jbi.force.task}" 
+        keepArchive="${jbi.keep.archive}" 
+        name="${jbi.service.assembly.name}" 
+        />
+    </target>
+
+    <target name="-init-sa-lifecycle-options" depends="init-jbi-admin" >
+        <!-- default service assembly name value. null or empty for no service assembly dependency in query tasks-->
+        <property name="jbi.service.assembly.name" value="" />        
+    </target>
+    
+    <!-- start service assembly target -->    
+    <target  name="start-service-assembly" depends="init-jbi-admin, -init-sa-lifecycle-options" description="starts service assembly">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.start.sa" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-start-service-assembly
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.service.assembly.name}" 
+        />
+    </target>
+    
+    <!-- stop service assembly target -->    
+    <target  name="stop-service-assembly" depends="init-jbi-admin, -init-sa-lifecycle-options" description="stops service assembly">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.stop.sa" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-stop-service-assembly
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        name="${jbi.service.assembly.name}" 
+        />
+    </target>
+
+    <!-- shutdown service assembly target -->
+    <target  name="shut-down-service-assembly" depends="init-jbi-admin, -init-sa-lifecycle-options" description="shuts down service assembly">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.shutdown.sa" />
+        <jbi:echo-info-name name="${jbi.service.assembly.name}" />
+        <jbi-shut-down-service-assembly
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        force="${jbi.force.task}" 
+        name="${jbi.service.assembly.name}" 
+        />
+    </target>
+    
+    <!-- Configuration targets -->
+    <!-- uninstall target for uninstalling a component -->
+    <target name="-init-set-config" depends="init-jbi-admin" >
+        <!-- default component name value. null or empty for no name-->
+        <property name="jbi.component.name" value="" />
+    </target>
+    
+    <target  name="set-runtime-configuration" depends="init-config-comp-runtime, init-jbi-admin, -init-set-config"
+        description="Set the runtime configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.set.runtime.configuration" />
+        <jbi-set-runtime-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        params="${jbi.config.params.file}">
+            <param name="${jbi.config.param.name}" value="${jbi.config.param.value}"/>
+        </jbi-set-runtime-configuration>
+    </target>
+
+    <target  name="list-runtime-configuration" depends="init-config-comp-runtime, init-jbi-admin, -init-list-config-options"
+        description="List runtime configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.runtime.configuration" />
+        <jbi-list-runtime-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}">
+            <param name="${jbi.config.param.name}"/>
+        </jbi-list-runtime-configuration>
+    </target>
+
+    <target  name="set-component-configuration" depends="init-config-comp-runtime, init-jbi-admin, -init-set-config"
+        description="Set component configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.set.component.configuration" />
+        <jbi-set-component-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}"
+        params="${jbi.config.params.file}">
+            <param name="${jbi.config.param.name}" value="${jbi.config.param.value}"/>
+        </jbi-set-component-configuration>
+    </target>
+    
+    <target  name="list-component-configuration" depends="init-config-comp-runtime, init-jbi-admin, -init-list-config-options"
+        description="List component configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.component.configuration" />
+        <jbi-list-component-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+            <param name="${jbi.config.param.name}"/>
+        </jbi-list-component-configuration>
+    </target>
+
+    <target  name="set-runtime-logger" depends="init-config-loggers, init-jbi-admin, -init-set-config"
+        description="Set runtime logger">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.set.runtime.logger" />
+        <jbi-set-runtime-loggers
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}">
+            <logger name="${jbi.logger.name}" level="${jbi.logger.level}" />
+        </jbi-set-runtime-loggers>
+    </target>
+
+    <target  name="list-runtime-loggers" depends="init-config-loggers, init-jbi-admin, -init-list-config-options"
+        description="List runtime loggers">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.runtime.loggers" />
+        <jbi-list-runtime-loggers
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}">
+            <logger name="${jbi.logger.name}"/>
+        </jbi-list-runtime-loggers>
+    </target>
+
+    <target  name="set-component-logger" depends="init-config-loggers, init-jbi-admin, -init-set-config"
+        description="Set component logger">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.set.component.logger" />
+        <jbi-set-component-loggers
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+	    <logger name="${jbi.logger.name}" level="${jbi.logger.level}" />
+	</jbi-set-component-loggers>
+    </target>
+    
+    <target  name="list-component-loggers" depends="init-config-loggers, init-jbi-admin, -init-list-config-options"
+        description="List component loggers">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.component.loggers" />
+        <jbi-list-component-loggers
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+            <logger name="${jbi.logger.name}"/>
+        </jbi-list-component-loggers>
+    </target>
+
+    <target  name="update-application-configuration" depends="init-config-app-config, init-jbi-admin, -init-set-config"
+        description="Update application configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.update.application.configuration" />
+        <jbi-update-application-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}"
+        name="${jbi.app.config.name}"
+	params="${jbi.app.config.params.file}"/>
+    </target>
+    
+    <target  name="create-application-configuration" depends="init-config-app-config, init-jbi-admin, -init-set-config"
+        description="Create application configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.create.application.configuration" />
+        <jbi-create-application-configuration
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}"
+        name="${jbi.app.config.name}"
+	params="${jbi.app.config.params.file}"/>
+    </target>
+    
+    <target  name="list-application-configurations" depends="init-config-app-config, init-jbi-admin, -init-set-config"
+        description="List application configurations">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.application.configurations" />
+        <jbi-list-application-configurations
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+	    <appconfig name="${jbi.app.config.name}"/>
+	</jbi-list-application-configurations>
+    </target>
+    
+    <target  name="delete-application-configuration" depends="init-config-app-config, init-jbi-admin, -init-set-config"
+        description="Delete the application configuration">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.delete.application.configuration" />
+        <jbi-delete-application-configurations
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+	    <appconfig name="${jbi.app.config.name}"/>
+	</jbi-delete-application-configurations>
+    </target>
+    
+    <target  name="update-application-variable" depends="init-config-app-variables, init-jbi-admin, -init-set-config"
+        description="Update application variables">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.update.application.variables" />
+        <jbi-update-application-variables
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}"
+        appvariables="${jbi.app.variables.file}">
+            <appvariable name="${jbi.app.variable.name}" value="${jbi.app.variable.value}"
+                                                        type="${jbi.app.variable.type}"/>
+        </jbi-update-application-variables>
+    </target>
+
+    <target  name="create-application-variable" depends="init-config-app-variables, init-jbi-admin, -init-set-config"
+        description="Create application variables">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.create.application.variables" />
+        <jbi-create-application-variables
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}"
+        appvariables="${jbi.app.variables.file}">
+	    <appvariable name="${jbi.app.variable.name}" value="${jbi.app.variable.value}"
+							type="${jbi.app.variable.type}"/>
+	</jbi-create-application-variables>
+    </target>
+    
+    <target  name="list-application-variables" depends="init-config-app-variables, init-jbi-admin, -init-set-config"
+        description="List application variables">
+        <property name="jbi.show.full.length" value="false" />
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.application.variables" />
+        <jbi-list-application-variables
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        showFullLength="${jbi.show.full.length}"
+        componentName="${jbi.component.name}">
+	    <appvariable name="${jbi.app.variable.name}"/>
+	</jbi-list-application-variables>
+    </target>
+    
+    <target  name="delete-application-variable" depends="init-config-app-variables, init-jbi-admin, -init-set-config"
+        description="Delete application variable">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.delete.application.variable" />
+        <jbi-delete-application-variables
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        componentName="${jbi.component.name}">
+	    <appvariable name="${jbi.app.variable.name}"/>
+	</jbi-delete-application-variables>
+    </target>
+    
+    <target name="verify-application-environment" depends="init-jbi-admin, -init-deploy-sa" >
+        <property name="jbi.template.dir" value="" />
+        <property name="jbi.include.deploy.command" value="false" />
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.verify.application.environment" />
+        <jbi-verify-application-environment
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+	file="${jbi.deploy.file}"
+	templatedir="${jbi.template.dir}"
+        includedeploy="${jbi.include.deploy.command}"
+        />
+    </target>
+
+    <target name="export-application-environment" depends="init-jbi-admin, -init-deploy-sa" >
+        <property name="jbi.config.dir" value="" />
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.export.application.environment" />
+        <jbi-export-application-environment
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        serviceassemblyname="${jbi.service.assembly.name}"
+        configdir="${jbi.config.dir}"
+        />
+    </target>
+
+    <!-- Query targets -->
+    <target name="-init-list-config-options" depends="init-jbi-admin" >
+        <property name="jbi.component.name" value="" />
+    </target>
+
+    <target name="-init-list-options" depends="init-jbi-admin" >
+        <!-- default component state value. null or empty for any component state in query tasks -->
+        <property name="jbi.component.state" value="" />
+
+        <!-- default service assembly state value. null or empty for any service assembly state in query tasks -->
+        <property name="jbi.service.assembly.state" value="" />
+    
+        <!-- default component name value. null or empty for no component dependency in query tasks where either
+        service engine or binding component name can be specified -->
+        <property name="jbi.component.name" value="" />
+    
+        <!-- default service engine name value. null or empty for no service engine name in list-service-engines query task -->
+        <property name="jbi.service.engine.name" value="" />
+    
+        <!-- default binding component name value. null or empty for no binding component name in list-binding-components query task -->
+        <property name="jbi.binding.component.name" value="" />
+    
+        <!-- default shared library name value. null or empty for no shared library dependency in query tasks -->
+        <property name="jbi.shared.library.name" value="" />
+
+        <!-- default endpoint name value. null or empty for no service assembly dependency in query tasks-->
+        <property name="jbi.endpoint.name" value="" />        
+
+        <!-- default service assembly name value. null or empty for no service assembly dependency in query tasks-->
+        <property name="jbi.service.assembly.name" value="" />        
+    </target>
+    
+    <target  name="list-all-statistics" depends="init-jbi-admin, -init-list-options"
+        description="Lists all statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.endpoint" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        type="all" />
+    </target>
+
+    <target  name="list-endpoint-statistics" depends="init-jbi-admin, -init-list-options"
+        description="Lists endpoint statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.endpoint" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        type="endpoint" >
+             <endpoint name="${jbi.endpoint.name}" />
+        </jbi-list-statistics>
+    </target>
+
+    <target  name="list-service-assembly-statistics" depends="init-jbi-admin, -init-list-options"
+        description="Lists service assembly statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.service.assembly" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+         type="serviceassembly" >
+             <serviceassembly name="${jbi.service.assembly.name}" />
+        </jbi-list-statistics>
+    </target>
+
+    <target  name="list-component-statistics" depends="init-jbi-admin, -init-list-config-options"
+        description="Lists component statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.component" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        type="component" >
+             <component name="${jbi.component.name}" />
+        </jbi-list-statistics>
+    </target>
+
+    <target  name="list-nmr-statistics" depends="init-jbi-admin, -init-list-config-options"
+        description="Lists nmr statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.nmr" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"  
+        failOnError="${jbi.task.fail.on.error}"
+        type="nmr" />
+    </target>
+
+    <target  name="list-framework-statistics" depends="init-jbi-admin, -init-list-config-options"
+        description="Lists framework statistics data">
+        <jbi:echo-info-cmd i18nkey="echo.i18n.key.list.statistics.framework" />
+        <jbi-list-statistics
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        type="framework" />
+    </target>
+
+    <!-- lists info on the service engines -->
+    <target name="-list-service-engines-in-xml-ouput" depends="init-jbi-admin, -init-list-options" if="jbi.list.xml.output"
+        description="List Service Engines in xml text output" >
+        <jbi-list-service-engines
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        serviceEngineName="${jbi.service.engine.name}"
+        state="${jbi.component.state}" 
+        descriptor="${jbi.show.descriptor}" 
+        sharedLibraryName="${jbi.shared.library.name}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        xmlOutput="jbi.list.output"
+        />
+        <i18n-echo message="${jbi.list.output}" />
+    </target>
+        
+    <target  name="-list-service-engines-in-text-output" depends="init-jbi-admin, -init-list-options" unless="jbi.list.xml.output"
+        description="List Service Engines in formatted plain text">
+        <jbi-list-service-engines
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        serviceEngineName="${jbi.service.engine.name}"
+        state="${jbi.component.state}" 
+        descriptor="${jbi.show.descriptor}" 
+        sharedLibraryName="${jbi.shared.library.name}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        />
+    </target>
+    
+    <target  name="list-service-engines" 
+    description="List Service Engines"
+    depends="init-jbi-admin, -init-list-options, -list-service-engines-in-xml-ouput, 
+    -list-service-engines-in-text-output"
+    />
+    
+    <!-- lists info on the binding components -->
+    <target name="-list-binding-components-in-xml-ouput" depends="init-jbi-admin, -init-list-options" if="jbi.list.xml.output"
+        description="List Binding Components ">
+        <jbi-list-binding-components
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}"
+        bindingComponentName="${jbi.binding.component.name}"
+        state="${jbi.component.state}" 
+        descriptor="${jbi.show.descriptor}" 
+        sharedLibraryName="${jbi.shared.library.name}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        xmlOutput="jbi.list.output"
+        />
+        <i18n-echo message="${jbi.list.output}" />
+    </target>
+    
+    <target name="-list-binding-components-in-text-output" depends="init-jbi-admin, -init-list-options" unless="jbi.list.xml.output"
+        description="List Binding Components ">
+        <jbi-list-binding-components
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        bindingComponentName="${jbi.binding.component.name}"
+        state="${jbi.component.state}" 
+        descriptor="${jbi.show.descriptor}" 
+        sharedLibraryName="${jbi.shared.library.name}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        />
+    </target>
+        
+    <target name="list-binding-components" 
+    description="List Binding Components"
+    depends="init-jbi-admin, -init-list-options, -list-binding-components-in-xml-ouput,
+    -list-binding-components-in-text-output"
+    />
+    
+    <!-- lists info on the shared libraries -->
+    <target name="-list-shared-libraries-in-xml-ouput" depends="init-jbi-admin, -init-list-options" if="jbi.list.xml.output"
+        description="List Shared Libraries">
+        <jbi-list-shared-libraries
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        sharedLibraryName="${jbi.shared.library.name}"
+        componentName="${jbi.component.name}"
+        descriptor="${jbi.show.descriptor}"
+        xmlOutput="jbi.list.output"
+        />
+        <i18n-echo message="${jbi.list.output}" />
+    </target>
+    
+    <target name="-list-shared-libraries-in-text-output" depends="init-jbi-admin, -init-list-options" unless="jbi.list.xml.output"
+        description="List Shared Libraries">
+        <jbi-list-shared-libraries
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}"
+        sharedLibraryName="${jbi.shared.library.name}"
+        componentName="${jbi.component.name}"
+        descriptor="${jbi.show.descriptor}"
+        />
+    </target>
+    
+    <target name="list-shared-libraries" 
+    description="List Shared Libraries"
+    depends="init-jbi-admin, -init-list-options, -list-shared-libraries-in-xml-ouput,
+    -list-shared-libraries-in-text-output"
+    />
+            
+    <!-- lists info on the service assemblies deployed -->
+    <target name="-list-service-assemblies-in-xml-ouput" depends="init-jbi-admin, -init-list-options" if="jbi.list.xml.output"
+        description="List Service Assemblies">
+        <jbi-list-service-assemblies
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}" 
+        failOnError="${jbi.task.fail.on.error}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        state="${jbi.service.assembly.state}"
+        componentName="${jbi.component.name}"
+        xmlOutput="jbi.list.output"
+        descriptor="${jbi.show.descriptor}"
+        />
+        <i18n-echo message="${jbi.list.output}" />
+    </target>
+    
+    <target name="-list-service-assemblies-in-text-output" depends="init-jbi-admin, -init-list-options" unless="jbi.list.xml.output"
+        description="List Service Assemblies">
+        <jbi-list-service-assemblies
+        username="${jbi.username}" password="${jbi.password}" secure="${jbi.secure}"  
+        host="${jbi.host}" port="${jbi.port}" target="${jbi.target}"
+        failOnError="${jbi.task.fail.on.error}" 
+        serviceAssemblyName="${jbi.service.assembly.name}"
+        state="${jbi.service.assembly.state}"
+        componentName="${jbi.component.name}"
+        descriptor="${jbi.show.descriptor}"
+        />
+    </target>
+        
+    <target name="list-service-assemblies" 
+    description="List Service Assemblies"
+    depends="init-jbi-admin, -init-list-options, -list-service-assemblies-in-xml-ouput,
+    -list-service-assemblies-in-text-output"
+    />
+    
+    
+    <!-- undocumented target : calls all the query tasks -->
+    <target  name="list-all" 
+        description="List Details about All Components and Deployments "
+        depends = "init-jbi-admin, -init-list-options,
+        list-service-engines,
+        list-binding-components,
+        list-shared-libraries,
+        list-service-assemblies " >
+    </target>            
+    
+    <!-- help target -->
+    <target name="usage" depends="help" />
+    <target name="help" depends="init-jbi-admin" description="Help information">
+        <i18n-echo key="echo.i18n.key.help" />
+    </target>
+    
+</project>

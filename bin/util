@@ -1,0 +1,24 @@
+#!/bin/bash -eu
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+
+function update_configuration() { 
+
+	export JAVA_HOME=/etc/alternatives/java_sdk_1.6.0
+
+	echo $JAVA_HOME > $OPENSHIFT_GLASSFISH_DIR/env/JAVA_HOME
+
+	echo "$JAVA_HOME/bin:$OPENSHIFT_GLASSFISH_DIR/bin" > $OPENSHIFT_GLASSFISH_DIR/env/OPENSHIFT_GLASSFISH_PATH_ELEMENT
+}
+
+function print_sed_exp_replace_env_var {
+  sed_exp=""
+  for openshift_var in $(env | grep OPENSHIFT_ | awk -F '=' '{print $1}')
+  do
+    variable_val=$(echo "${!openshift_var}" | sed -e "s@\/@\\\\/@g")
+    sed_exp="${sed_exp} -e s/\${env.${openshift_var}}/${variable_val}/g"
+  done
+  printf "%s\n" "$sed_exp"
+
+}

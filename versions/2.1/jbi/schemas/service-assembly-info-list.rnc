@@ -1,0 +1,28 @@
+default namespace this = "http://java.sun.com/xml/ns/jbi/service-assembly-info-list"
+
+start = element service-assembly-info-list 
+{
+    # version is 1.0 in this revision of JBI
+    attribute version { xsd:decimal },
+    service-assembly-info*
+}
+
+service-assembly-info = element service-assembly-info 
+{
+    attribute name { text },
+    attribute state { "Started" | "Stopped" | "Shutdown" | "Unknown" },
+    element description { text },
+    service-unit-info+,
+    element* -this:* { text }*
+}
+
+service-unit-info = element service-unit-info 
+{
+    attribute name { text },
+    attribute state { "Started" | "Stopped" | "Shutdown" | "Unknown" },
+    attribute deployed-on { text },
+    element description { text },
+    element* -this:* { text }*
+}
+
+

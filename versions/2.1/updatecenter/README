@@ -1,0 +1,16 @@
+Instructions to Launch the Update Center
+
+From the Glassfish installation Update Center directory Run:
+      ./updatetool
+
+Synopsis: updatetool [gui | tray | scheduler | all | help]
+
+Description: This command launches the Update Center utility. Use the Update Center to install additional modules and/or update existing modules with the latest download version. The Update Center displays the modules that are available for installation or update. Based on the user settings, the utility downloads the selected module distribution files, performs their installation, and updates the local registry of the installed modules.
+
+Operands: 
+ - gui: launches the Update Center graphical interface.
+ - tray: Windows only; launches the Update Center graphical interface and starts the tray icon.
+ - scheduler: launches the Update Center graphical interface with the schedule tab active.
+ - all: launches the Update Center graphical interface and starts the tray icon process and scheduler.
+ - help: displays a usage message.
+

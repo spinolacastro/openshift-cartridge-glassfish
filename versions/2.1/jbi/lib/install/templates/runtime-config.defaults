@@ -1,0 +1,2 @@
+deployment.autoDeployEnabled =  false
+deployment.autoDeployDir = ${com.sun.aas.instanceRoot}/autodeploy

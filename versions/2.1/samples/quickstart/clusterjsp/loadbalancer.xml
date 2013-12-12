@@ -1,0 +1,23 @@
+<!DOCTYPE loadbalancer PUBLIC "-//Sun Microsystems Inc.//DTD Sun ONE Application Server 7.1//EN" "sun-loadbalancer_1_2.dtd">
+<loadbalancer>
+    <cluster name="cluster1"  policy="round-robin">
+        <!--
+            Configure the listeners as space seperated URLs like 
+            listeners="http://host:port https://host:port" For example:
+            
+        <instance  name="instance1" enabled="true" disable-timeout-in-minutes="60" listeners="http://localhost:80 https://localhost:443" weight="100"/>
+
+        -->
+        <instance  name="instance1" enabled="true" disable-timeout-in-minutes="60" listeners="http://localhost:1110"  weight="100"/>
+        <instance  name="instance2" enabled="true" disable-timeout-in-minutes="60" listeners="http://localhost:1111"  weight="100"/>
+        <web-module context-root="clusterjsp" enabled="true" disable-timeout-in-minutes="60" error-url="sun-http-lberror.html" />
+        <health-checker url="/" interval-in-seconds="10" timeout-in-seconds="30" />
+    </cluster>
+    <property name="reload-poll-interval-in-seconds" value="60"/>
+    <property name="response-timeout-in-seconds" value="30"/>
+    <property name="https-routing" value="true"/>
+    <property name="require-monitor-data" value="false"/>
+    <property name="active-healthcheck-enabled" value="false"/>
+    <property name="number-healthcheck-retries" value="3"/>
+    <property name="rewrite-location" value="true"/>
+</loadbalancer>

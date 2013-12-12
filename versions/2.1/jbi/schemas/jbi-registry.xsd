@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ # BEGIN_HEADER - DO NOT EDIT
+ #
+ # The contents of this file are subject to the terms
+ # of the Common Development and Distribution License
+ # (the "License").  You may not use this file except
+ # in compliance with the License.
+ #
+ # You can obtain a copy of the license at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # See the License for the specific language governing
+ # permissions and limitations under the License.
+ #
+ # When distributing Covered Code, include this CDDL
+ # HEADER in each file and include the License file at
+ # https://open-esb.dev.java.net/public/CDDLv1.0.html.
+ # If applicable add the following below this CDDL HEADER,
+ # with the fields enclosed by brackets "[]" replaced with
+ # your own identifying information: Portions Copyright
+ # [year] [name of copyright owner]
+-->
+
+<!--
+ # @(#)jbi-registry.xsd
+ # Copyright 2004-2007 Sun Microsystems, Inc. All Rights Reserved.
+ #
+ # END_HEADER - DO NOT EDIT
+-->
+<!-- This is the schema for the integrated jbi registry -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns="http://java.sun.com/xml/ns/jbi/registry" 
+           targetNamespace="http://java.sun.com/xml/ns/jbi/registry" 
+           elementFormDefault="qualified">
+           
+   <xs:element name="jbi">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="components"         minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="shared-libraries"   minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="service-assemblies" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="servers"            minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="clusters"           minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="configs"            minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:complexType name="DomainEntityType">
+        <xs:attribute name="name"         type="xs:string" use="required"/>
+        <xs:attribute name="file-name"    type="xs:string" use="required"/>
+        <xs:attribute name="timestamp"    type="xs:integer"  use="required"/>
+   </xs:complexType>
+   
+    <xs:complexType name="DomainComponentType">
+        <xs:complexContent>
+            <xs:extension base="DomainEntityType">
+                <xs:attribute name="default-install" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="upgrade-number" type="xs:integer" use="optional" default="0"/>                
+            </xs:extension>    
+        </xs:complexContent>
+    </xs:complexType> 
+   
+    <xs:complexType name="DomainSharedLibraryType">
+        <xs:complexContent>
+              <xs:extension base="DomainEntityType">
+                   <xs:attribute name="default-install" type="xs:boolean" use="optional" default="false"/>            
+            </xs:extension>    
+        </xs:complexContent>                   
+    </xs:complexType> 
+   
+   <xs:element name="components">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="component" type="DomainComponentType" minOccurs="0" maxOccurs="unbounded"/> 
+            </xs:sequence>
+        </xs:complexType> 
+   </xs:element>
+   
+   <xs:element name="shared-libraries">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="shared-library" type="DomainSharedLibraryType" minOccurs="0" maxOccurs="unbounded"/> 
+            </xs:sequence>
+        </xs:complexType> 
+   </xs:element>
+   
+   <xs:element name="service-assemblies">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="service-assembly" type="DomainEntityType" minOccurs="0" maxOccurs="unbounded"/> 
+            </xs:sequence>
+        </xs:complexType> 
+   </xs:element>
+      
+   <xs:element name="servers"  type="ServerListType"/>
+   <xs:element name="clusters" type="ClusterListType"/>
+   
+   <xs:complexType name="ServerListType">
+        <xs:sequence>
+            <xs:element name="server" type="InstalledComponentsListType"  minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name="ClusterListType">
+        <xs:sequence>
+            <xs:element name="cluster" type="InstalledComponentsListType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+   </xs:complexType>
+   
+   <xs:element name="configs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="config" type="ConfigType" minOccurs="0" maxOccurs="unbounded"/> 
+            </xs:sequence>
+        </xs:complexType> 
+   </xs:element>
+   
+   <xs:complexType name="ConfigType">
+        <xs:sequence>
+         <xs:element name="config-type" type="ConfigCategoryType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <!-- the configuration name example : server-config -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+   </xs:complexType>
+   
+   <xs:complexType name="InstalledComponentsListType">
+        <xs:sequence>
+            <xs:element name="component-ref"        type="ComponentRefType"     minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="shared-library-ref"   type="SharedLibraryRefType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="service-assembly-ref" type="ServiceAssemblyRefType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name-ref" type="xs:string"/>
+   </xs:complexType>
+   
+   
+   <xs:complexType name="ConfigCategoryType">
+        <xs:sequence>
+            <xs:element name="property"             type="PropertyType"     minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="category" type="ConfigTypeEnum" use="required"/>
+   </xs:complexType>
+   
+   <!-- Ref Elements -->        
+   <xs:complexType name="ComponentRefType">
+         <xs:sequence>
+            <xs:element name="property" type="PropertyType"             minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="service-units" type="ServiceUnitListType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="component-config" type="ComponentConfigType" minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+         <xs:attribute name="name-ref"                      type="xs:string"           use="required"/>
+         <xs:attribute name="state"                         type="LifeCycleStatusEnum" use="required"/>
+         <xs:attribute name="install-root"                  type="xs:string"           use="required"/>
+         <xs:attribute name="workspace"                     type="xs:string"           use="required"/>
+   </xs:complexType>
+   
+   <xs:complexType name="SharedLibraryRefType">
+         <xs:attribute name="name-ref"             type="xs:string"  use="required"/>
+         <xs:attribute name="install-root"         type="xs:string"  use="required"/>
+   </xs:complexType>
+
+   <xs:complexType name="ServiceAssemblyRefType">
+         <xs:attribute name="name-ref"             type="xs:string"  use="required"/>
+         <!-- The state is set here only if the service assembly has zero service units --> 
+         <xs:attribute name="state"                type="LifeCycleStatusEnum" use="optional"/>
+   </xs:complexType>
+
+   <xs:complexType name="PropertyType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="name"  type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+   </xs:complexType>
+   
+    <xs:complexType name="AppVariableType">
+        <xs:complexContent>
+            <xs:extension base="PropertyType">
+                <xs:sequence>
+                   <xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="1"/>            
+                </xs:sequence>
+            </xs:extension>    
+        </xs:complexContent>                   
+    </xs:complexType> 
+      
+   <xs:complexType name="ServiceUnitListType">
+      <xs:sequence>
+         <xs:element name="service-unit" type="ServiceUnitType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name="ComponentConfigType">
+      <xs:sequence>
+         <xs:element name="property" type="PropertyType"           minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="application-variable" type="AppVariableType"           minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="application-configuration" type="AppConfigType"    minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name="AppConfigType">
+      <xs:sequence>
+         <xs:element name="property" type="PropertyType"           minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="name"  type="xs:string" use="required"/>
+   </xs:complexType>
+   
+   <xs:complexType name="ServiceUnitType">
+      <xs:attribute name="name"  type="xs:string"/>
+      <xs:attribute name="state" type="LifeCycleStatusEnum"/>
+      <xs:attribute name="service-assembly-ref" type="xs:string"/>
+   </xs:complexType>
+   
+   <!-- Enumerations -->
+   <xs:simpleType name="LifeCycleStatusEnum">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="Started"/>
+         <xs:enumeration value="Stopped"/>
+         <xs:enumeration value="Shutdown"/>
+         <xs:enumeration value="Unknown"/>
+      </xs:restriction>
+   </xs:simpleType>
+   
+   <xs:simpleType name="ConfigTypeEnum">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="Deployment"/>
+         <xs:enumeration value="Installation"/>
+         <xs:enumeration value="Logger"/>
+         <xs:enumeration value="System"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+</xs:schema>

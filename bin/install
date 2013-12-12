@@ -1,0 +1,31 @@
+#!/bin/bash -eu
+
+
+source $OPENSHIFT_GLASSFISH_DIR/bin/util
+
+case "$1" in
+  -v|--version)
+    version="$2"
+esac
+
+echo "$version" > "$OPENSHIFT_GLASSFISH_DIR/env/OPENSHIFT_GLASSFISH_VERSION"
+
+export JAVA_HOME=/etc/alternatives/java_sdk_1.6.0
+
+pushd ${OPENSHIFT_GLASSFISH_DIR}/versions/${version}
+
+./lib/ant/bin/ant -f setup.xml
+
+popd 
+
+cp -ar ${OPENSHIFT_GLASSFISH_DIR}/versions/${version}/bin/* ${OPENSHIFT_GLASSFISH_DIR}/bin
+cp -a ${OPENSHIFT_GLASSFISH_DIR}/versions/${version}/domains/domain1/config/domain.xml ${OPENSHIFT_GLASSFISH_DIR}/template/.openshift/config
+cp -a ${OPENSHIFT_GLASSFISH_DIR}/versions/${version}/domains/domain1/docroot/* ${OPENSHIFT_GLASSFISH_DIR}/template/docroot/
+
+
+update_configuration
+
+
+
+
+
