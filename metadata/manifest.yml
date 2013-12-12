@@ -10,7 +10,7 @@ Vendor: Oracle Corporation
 Cartridge-Version: 0.0.1
 Compatible-Versions: []
 Cartridge-Vendor: getup
-Source-Url: https://github.com/spinolacastro/glassfish.git
+Source-Url: https://github.com/spinolacastro/openshift-cartridge-glassfish.git
 Categories:
   - service
   - glassfish
