@@ -50,7 +50,7 @@ function start {
   if isrunning; then
       echo "Application is already running"
   else    
-    ${GLASSFISH_BIN_DIR}/standalone.sh start-domain > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+    ${GLASSFISH_BIN_DIR}/standalone.sh start > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
     PROCESS_ID=$!
     echo "$PROCESS_ID" > ${GLASSFISH_PID_FILE}
 
@@ -70,7 +70,7 @@ function stop {
     if [ -f "$GLASSFISH_PID_FILE" ]; then
       pid=$(cat $GLASSFISH_PID_FILE);
       echo "Stopping glassfish:$pid ..." 1>&2
-      ${GLASSFISH_BIN_DIR}/standalone.sh stop-domain > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+      ${GLASSFISH_BIN_DIR}/standalone.sh stop > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
     else
       echo "Failed to locate GLASSFISH PID File" 1>&2
     fi

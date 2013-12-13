@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh 
 
 DIRNAME=`dirname "$0"`
 
@@ -27,7 +27,7 @@ function _asadmin() {
 
 }
 
-function start-domain() {
+function start() {
 
 	if [ -r "$RUN_CONF" ]; then
 	    . "$RUN_CONF"
@@ -38,14 +38,14 @@ function start-domain() {
 }
 
 
-function stop-domain() {
+function stop() {
 
 	_asadmin "stop-domain"
 
 }
 
 case "$1" in
-  start-domain)         start-domain ;;
-  stop-domain)          stop-domain ;;
+  start)         start ;;
+  stop)          stop ;;
   *)           exit 0
 esac
