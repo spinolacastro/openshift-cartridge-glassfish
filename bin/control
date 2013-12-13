@@ -2,18 +2,79 @@
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
-
 source $OPENSHIFT_GLASSFISH_DIR/bin/util
+
+GLASSFISH_BIN_DIR=${OPENSHIFT_GLASSFISH_DIR}/bin
+GLASSFISH_PID_FILE=${OPENSHIFT_HOMEDIR}/app-root/runtime/glassfish.pid
+
+cartridge_type="glassfish"
+
+
+# Check if the server http port is up
+function ishttpup() {
+    let count=0
+    while [ ${count} -lt 64 ]
+    do
+        if /usr/sbin/lsof -P -n -i "@${OPENSHIFT_GLASSFISH_IP}:${OPENSHIFT_GLASSFISH_PORT}" | grep "(LISTEN)" > /dev/null; then
+            echo "Found ${OPENSHIFT_GLASSFISH_IP}:${OPENSHIFT_GLASSFISH_PORT} listening port"
+            return 0
+        fi
+        let count=${count}+1
+
+        sleep 2
+    done
+
+    return 1
+}
+
+# Check if the process is running
+function isrunning() {
+
+    # Check for running app
+    if [ -f "$GLASSFISH_PID_FILE" ]; then
+      jbpid=$(cat $GLASSFISH_PID_FILE);
+      if /bin/ps --pid $jbpid 1>&2 >/dev/null;
+      then
+        return 0
+      fi
+    fi
+
+    return 1
+}
 
 
 function start {
+	echo "Starting $cartridge_type cart"
 
-  asadmin start-domain &
+  # Check for running app
+  if isrunning; then
+      echo "Application is already running"
+  else    
+    ${GLASSFISH_BIN_DIR}/standalone.sh start-domain > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+    PROCESS_ID=$!
+    echo "$PROCESS_ID" > ${GLASSFISH_PID_FILE}
+
+    if ! ishttpup; then
+        echo "Timed out waiting for http listening port"
+        exit 1
+    fi
+  fi
+
 }
 
 function stop {
 
-  asadmin stop-domain &
+  echo "Stopping $cartridge_type cart"
+
+  if isrunning; then
+    if [ -f "$GLASSFISH_PID_FILE" ]; then
+      pid=$(cat $GLASSFISH_PID_FILE);
+      echo "Stopping glassfish:$pid ..." 1>&2
+      ${GLASSFISH_BIN_DIR}/standalone.sh stop-domain > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+    else
+      echo "Failed to locate GLASSFISH PID File" 1>&2
+    fi
+  fi
 
 }
 
@@ -22,6 +83,14 @@ function restart {
   start
 }
 
+function status() {
+   if isrunning
+   then
+      client_result "Application is running"
+   else
+      client_result "Application is either stopped or inaccessible"
+   fi
+}
 
 
 function not_implemented {
@@ -32,7 +101,7 @@ case "$1" in
   start)         start ;;
   stop)          stop ;;
   restart)       restart ;;
-  status)        not_implemented ;;
+  status)        status ;;
   reload)        not_implemented ;;
   tidy)          not_implemented ;;
   pre-build)     not_implemented ;;
