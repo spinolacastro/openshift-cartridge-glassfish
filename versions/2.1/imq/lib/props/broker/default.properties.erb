@@ -89,7 +89,7 @@ imq.service.activelist=jms,admin
 # here. If you want a particular service to bind to a different hostname
 # you may set the specific hostname property for that service
 # (for example see imq.jms.tcp.hostname property below).
-imq.hostname="<%= ENV['OPENSHIFT_GLASSFISH_IP'] %>"
+imq.hostname=<%= ENV['OPENSHIFT_GLASSFISH_IP'] %>
 
 # Connection Service Specific Settings
 ######################################
