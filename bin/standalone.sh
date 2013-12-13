@@ -33,14 +33,14 @@ function start-domain() {
 	    . "$RUN_CONF"
 	fi
 
-	_asadmin start-domain
+	_asadmin "start-domain"
 
 }
 
 
 function stop-domain() {
 
-	_asadmin stop-domain
+	_asadmin "stop-domain"
 
 }
 
