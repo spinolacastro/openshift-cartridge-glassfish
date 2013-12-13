@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 DIRNAME=`dirname "$0"`
 
