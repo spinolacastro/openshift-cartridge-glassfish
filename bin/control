@@ -7,6 +7,9 @@ source $OPENSHIFT_GLASSFISH_DIR/bin/util
 GLASSFISH_BIN_DIR=${OPENSHIFT_GLASSFISH_DIR}/bin
 GLASSFISH_PID_FILE=${OPENSHIFT_HOMEDIR}/app-root/runtime/glassfish.pid
 
+GLASSFISH_DOCROOT_DIR=${OPENSHIFT_GLASSFISH_DIR}/versions/2.1/domains/domain1/docroot
+GLASSFISH_AUTODEPLOY_DIR=${OPENSHIFT_GLASSFISH_DIR}/versions/2.1/domains/domain1/autodeploy
+
 cartridge_type="glassfish"
 
 
@@ -92,6 +95,22 @@ function status() {
    fi
 }
 
+function deploy() {
+  echo "Deploying Glassfish"
+
+  if [ "$(ls ${OPENSHIFT_REPO_DIR}/docroot)" ]; then
+    rsync -r --delete --exclude ".*" ${OPENSHIFT_REPO_DIR}/docroot/ $GLASSFISH_DOCROOT_DIR
+  else
+    rm -rf ${GLASSFISH_DOCROOT_DIR}/*
+  fi
+
+  if [ "$(ls ${OPENSHIFT_REPO_DIR}/autodeploy)" ]; then
+    rsync -r --delete --exclude ".*" ${OPENSHIFT_REPO_DIR}/autodeploy/ $GLASSFISH_AUTODEPLOY_DIR
+  else
+    rm -rf ${GLASSFISH_AUTODEPLOY_DIR}/*
+  fi
+}
+
 
 function not_implemented {
   echo "$CALL: not implemented"
@@ -105,7 +124,7 @@ case "$1" in
   reload)        not_implemented ;;
   tidy)          not_implemented ;;
   pre-build)     not_implemented ;;
-  build)         not_implemented ;;
+  build)         deploy ;;
   deploy)        not_implemented ;;
   post-deploy)   not_implemented ;;
   pre-snapshot)  not_implemented ;;
