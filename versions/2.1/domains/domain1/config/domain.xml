@@ -22,26 +22,36 @@
   <lifecycle-module class-name="com.sun.xml.ws.transport.tcp.server.glassfish.WSTCPLifeCycleModule" classpath="${com.sun.aas.installRoot}/lib/webservices-rt.jar" enabled="true" is-failure-fatal="false" name="WSTCPConnectorLCModule" object-type="system-all"/>
  </applications>
  <resources>
-    <jdbc-resource enabled="true" jndi-name="jdbc/__TimerPool" object-type="system-admin" pool-name="__TimerPool"/>
-    <jdbc-resource enabled="true" jndi-name="jdbc/__CallFlowPool" object-type="system-all" pool-name="__CallFlowPool"/>
-    <jdbc-resource enabled="true" jndi-name="jdbc/__default" object-type="user" pool-name="DerbyPool"/>
- 
-  <jdbc-connection-pool allow-non-component-callers="false" associate-with-thread="false" connection-creation-retry-attempts="0" connection-creation-retry-interval-in-seconds="10" connection-leak-reclaim="false" connection-leak-timeout-in-seconds="0" connection-validation-method="auto-commit" datasource-classname="org.apache.derby.jdbc.EmbeddedXADataSource" fail-all-connections="false" idle-timeout-in-seconds="300" is-connection-validation-required="false" is-isolation-level-guaranteed="true" lazy-connection-association="false" lazy-connection-enlistment="false" match-connections="false" max-connection-usage-count="0" max-pool-size="32" max-wait-time-in-millis="60000" name="__CallFlowPool" non-transactional-connections="false" pool-resize-quantity="2" res-type="javax.sql.XADataSource" statement-timeout-in-seconds="-1" steady-pool-size="8" validate-atmost-once-period-in-seconds="0" wrap-jdbc-objects="false">
-      <property name="databaseName" value="${com.sun.aas.instanceRoot}/lib/databases/sun-callflow"/>
-      <property name="connectionAttributes" value=";create=true"/>
+     <jdbc-connection-pool 
+        name="PostgreSQLDS" 
+        datasource-classname="org.postgresql.xa.PGXADataSource"
+        res-type="javax.sql.DataSource">
+        <property name="user" value="${env.OPENSHIFT_POSTGRESQL_DB_USERNAME}"/>
+        <property name="password" value="${env.OPENSHIFT_POSTGRESQL_DB_PASSWORD}"/>
+        <property name="url" value="jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}"/>
     </jdbc-connection-pool>
- 
-    <jdbc-connection-pool allow-non-component-callers="false" associate-with-thread="false" connection-creation-retry-attempts="0" connection-creation-retry-interval-in-seconds="10" connection-leak-reclaim="false" connection-leak-timeout-in-seconds="0" connection-validation-method="auto-commit" datasource-classname="org.apache.derby.jdbc.EmbeddedXADataSource" fail-all-connections="false" idle-timeout-in-seconds="300" is-connection-validation-required="false" is-isolation-level-guaranteed="true" lazy-connection-association="false" lazy-connection-enlistment="false" match-connections="false" max-connection-usage-count="0" max-pool-size="32" max-wait-time-in-millis="60000" name="__TimerPool" non-transactional-connections="false" pool-resize-quantity="2" res-type="javax.sql.XADataSource" statement-timeout-in-seconds="-1" steady-pool-size="8" validate-atmost-once-period-in-seconds="0" wrap-jdbc-objects="false">
-      <property name="databaseName" value="${com.sun.aas.instanceRoot}/lib/databases/ejbtimer"/>
+
+    <jdbc-resource 
+        enabled="${postgresql.enabled}" 
+        jndi-name="jdbc/postgresql_type4" 
+        object-type="user" 
+        pool-name="PostgreSQLDS"/>   
+
+     <jdbc-connection-pool 
+        name="MysqlDS" 
+        datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"
+        res-type="javax.sql.DataSource">
+        <property name="user" value="${env.OPENSHIFT_MYSQL_DB_USERNAME}"/>
+        <property name="password" value="${env.OPENSHIFT_MYSQL_DB_PASSWORD}"/>
+        <property name="url" value="jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}"/>
     </jdbc-connection-pool>
-    <jdbc-connection-pool allow-non-component-callers="false" associate-with-thread="false" connection-creation-retry-attempts="0" connection-creation-retry-interval-in-seconds="10" connection-leak-reclaim="false" connection-leak-timeout-in-seconds="0" connection-validation-method="auto-commit" datasource-classname="org.apache.derby.jdbc.ClientDataSource" fail-all-connections="false" idle-timeout-in-seconds="300" is-connection-validation-required="false" is-isolation-level-guaranteed="false" lazy-connection-association="false" lazy-connection-enlistment="false" match-connections="false" max-connection-usage-count="0" max-pool-size="32" max-wait-time-in-millis="60000" name="DerbyPool" non-transactional-connections="false" pool-resize-quantity="2" res-type="javax.sql.DataSource" statement-timeout-in-seconds="-1" steady-pool-size="8" validate-atmost-once-period-in-seconds="0" wrap-jdbc-objects="false">
-     <property name="PortNumber" value="1527"/>
-     <property name="Password" value="APP"/>
-     <property name="User" value="APP"/>
-     <property name="serverName" value="${env.OPENSHIFT_GLASSFISH_IP}"/>
-     <property name="DatabaseName" value="sun-appserv-samples"/>
-     <property name="connectionAttributes" value=";create=true"/>
-   </jdbc-connection-pool>
+
+    <jdbc-resource 
+        enabled="${mysql.enabled}" 
+        jndi-name="jdbc/mysql-resource" 
+        object-type="user" 
+        pool-name="MysqlDS"/>       
+
  </resources>
  <configs>
   <config dynamic-reconfiguration-enabled="true" name="server-config">

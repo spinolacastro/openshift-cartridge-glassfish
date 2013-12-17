@@ -55,16 +55,16 @@ function start {
   else    
     ${GLASSFISH_BIN_DIR}/standalone.sh start > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
     RETVAL=$?
-
-    if ! ishttpup; then
-        echo "Timed out waiting for http listening port"
-        exit 1
-    fi
-    
     if [ $RETVAL -eq 0 ]; then
-                PID=`ps U ${OPENSHIFT_GEAR_UUID} | grep [d]omain1 | awk '{ print $1}'`
-                echo $PID > $GLASSFISH_PID_FILE
-        fi
+
+	    if ! ishttpup; then
+	        echo "Timed out waiting for http listening port"
+	        exit 1
+	    fi
+
+	    PID=`ps U ${OPENSHIFT_GEAR_UUID} | grep [d]omain1 | awk '{ print $1}'`
+	    echo $PID > $GLASSFISH_PID_FILE
+    fi
   fi
 
 }
