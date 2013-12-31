@@ -12,6 +12,9 @@ GLASSFISH_AUTODEPLOY_DIR=${OPENSHIFT_GLASSFISH_DIR}/versions/2.1/domains/domain1
 
 cartridge_type="glassfish"
 
+DIRNAME=`dirname "$0"`
+
+
 
 # Check if the server http port is up
 function ishttpup() {
@@ -102,6 +105,9 @@ function status() {
 function deploy() {
   echo "Deploying Glassfish"
 
+
+  update_configuration
+
   if [ "$(ls ${OPENSHIFT_REPO_DIR}/docroot)" ]; then
     rsync -r --delete --exclude ".*" ${OPENSHIFT_REPO_DIR}/docroot/ $GLASSFISH_DOCROOT_DIR
   else
@@ -109,9 +115,21 @@ function deploy() {
   fi
 
   if [ "$(ls ${OPENSHIFT_REPO_DIR}/autodeploy)" ]; then
+    rm -rf $GLASSFISH_AUTODEPLOY_DIR/.autodeploystatus/*
     rsync -r --delete --exclude ".*" ${OPENSHIFT_REPO_DIR}/autodeploy/ $GLASSFISH_AUTODEPLOY_DIR
   else
     rm -rf ${GLASSFISH_AUTODEPLOY_DIR}/*
+  fi
+}
+
+function update_configuration() {
+
+source $OPENSHIFT_GLASSFISH_DIR/bin/standalone.conf
+
+RUN_CONF="$DIRNAME/standalone.conf"
+
+  if [ -r "$RUN_CONF" ]; then
+      . "$RUN_CONF"
   fi
 }
 
@@ -128,15 +146,14 @@ case "$1" in
   reload)        not_implemented ;;
   tidy)          not_implemented ;;
   pre-build)     not_implemented ;;
-  build)         deploy ;;
-  deploy)        not_implemented ;;
+  build)         not_implemented ;;
+  deploy)        deploy ;;
   post-deploy)   not_implemented ;;
   pre-snapshot)  not_implemented ;;
   post-snapshot) not_implemented ;;
   pre-restore)   not_implemented ;;
   post-restore)  not_implemented ;;
   pre-receive)   not_implemented ;;
-  update-configuration) not_implemented ;;
   *)           exit 0
 esac
 

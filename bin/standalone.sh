@@ -3,10 +3,6 @@
 DIRNAME=`dirname "$0"`
 
 
-source $OPENSHIFT_GLASSFISH_DIR/bin/standalone.conf
-
-RUN_CONF="$DIRNAME/standalone.conf"
-
 
 
 function _asadmin() {
@@ -28,10 +24,6 @@ function _asadmin() {
 }
 
 function start() {
-
-	if [ -r "$RUN_CONF" ]; then
-	    . "$RUN_CONF"
-	fi
 
 	_asadmin "start-domain"
 
