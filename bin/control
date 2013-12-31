@@ -108,7 +108,7 @@ function deploy() {
   echo "Deploying Glassfish"
 
 
-  update_configuration
+  build_domain
 
   if [ "$(ls ${OPENSHIFT_REPO_DIR}/docroot)" ]; then
     rsync -r --delete --exclude ".*" ${OPENSHIFT_REPO_DIR}/docroot/ $GLASSFISH_DOCROOT_DIR
@@ -124,7 +124,7 @@ function deploy() {
   fi
 }
 
-function update_configuration() {
+function build_domain() {
 
 source $OPENSHIFT_GLASSFISH_DIR/bin/standalone.conf
 
