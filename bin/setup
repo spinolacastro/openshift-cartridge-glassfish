@@ -4,3 +4,13 @@ case "$1" in
   -v|--version)
     version="$2"
 esac
+
+source $OPENSHIFT_GLASSFISH_DIR/bin/standalone.conf
+DIRNAME=`dirname "$0"`
+
+RUN_CONF="$DIRNAME/standalone.conf"
+
+  if [ -r "$RUN_CONF" ]; then
+      . "$RUN_CONF"
+  fi
+
