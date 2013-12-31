@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
@@ -60,7 +60,9 @@ function start {
     RETVAL=$?
     if [ $RETVAL -eq 0 ]; then
 
-	    if ! ishttpup; then
+	  
+    exit 0
+      if ! ishttpup; then
 	        echo "Timed out waiting for http listening port"
 	        exit 1
 	    fi
