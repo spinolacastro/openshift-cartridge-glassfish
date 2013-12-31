@@ -3,8 +3,6 @@
 DIRNAME=`dirname "$0"`
 
 
-
-
 function _asadmin() {
 
 	. "${OPENSHIFT_GLASSFISH_DIR}/versions/2.1/config/asenv.conf"
